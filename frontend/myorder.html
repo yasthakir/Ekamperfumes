@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Orders - Aurora Perfumes</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+body { font-family:'Poppins',sans-serif; background:#fdfbf7; margin:0; padding:0;}
+.container { max-width:1000px; margin:0 auto; padding:40px 20px; }
+h2 { text-align:center; margin-bottom:40px; font-size:28px; }
+.order-card { background:white; padding:20px; border-radius:16px; box-shadow:0 6px 18px rgba(0,0,0,0.08); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+.order-info { flex:1; }
+.order-info p { margin:6px 0; }
+.order-actions { display:flex; gap:12px; flex-wrap:wrap; }
+.btn { padding:10px 16px; border:none; border-radius:10px; cursor:pointer; font-weight:600; transition:0.3s; }
+.back-btn { background:#caa97a; color:white; }
+.track-btn { background:#e6d2b2; color:#222; }
+.btn:hover { transform:scale(1.05); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>My Orders</h2>
+  <div id="ordersGrid"></div>
+</div>
+
+<script>
+// Example orders (replace with backend data later)
+const orders = [
+  { id: "ORD12345", date: "2025-09-20", total: "$120.00", status: "Shipped" },
+  { id: "ORD12346", date: "2025-09-22", total: "$65.00", status: "Processing" },
+  { id: "ORD12347", date: "2025-09-23", total: "$80.00", status: "Delivered" }
+];
+
+const ordersGrid = document.getElementById("ordersGrid");
+
+orders.forEach(order => {
+  const card = document.createElement("div");
+  card.classList.add("order-card");
+
+  card.innerHTML = `
+    <div class="order-info">
+      <p><strong>Order ID:</strong> ${order.id}</p>
+      <p><strong>Date:</strong> ${order.date}</p>
+      <p><strong>Total:</strong> ${order.total}</p>
+      <p><strong>Status:</strong> ${order.status}</p>
+    </div>
+    <div class="order-actions">
+      <button class="btn back-btn">← Back</button>
+      <button class="btn track-btn">Track Order</button>
+    </div>
+  `;
+
+  // Back button
+  card.querySelector(".back-btn").addEventListener("click", () => {
+    window.history.back();
+  });
+
+  // Track Order button
+  card.querySelector(".track-btn").addEventListener("click", () => {
+    localStorage.setItem("trackOrderId", order.id);
+    localStorage.setItem("trackOrderStatus", order.status);
+    window.location.href = "track-order.html";
+  });
+
+  ordersGrid.appendChild(card);
+});
+</script>
+</body>
+</html>

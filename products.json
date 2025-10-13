@@ -1,0 +1,52 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Amber Dusk",
+      "image": "images/bottle1.png",
+      "price": 59,
+      "category": "Signature",
+      "gender": "For Him"
+    },
+    {
+      "id": 2,
+      "name": "Rose Veil",
+      "image": "images/bottle2.png",
+      "price": 72,
+      "category": "Gift",
+      "gender": "For Her"
+    },
+    {
+      "id": 3,
+      "name": "Azure Bloom",
+      "image": "images/bottle3.png",
+      "price": 65,
+      "category": "Combo",
+      "gender": "For Her"
+    },
+    {
+      "id": 4,
+      "name": "Velour Mist",
+      "image": "images/bottle4.png",
+      "price": 80,
+      "category": "Signature",
+      "gender": "For Him"
+    },
+    {
+      "id": 5,
+      "name": "Crystal Noir",
+      "image": "images/bottle5.png",
+      "price": 95,
+      "category": "Gift",
+      "gender": "For Her"
+    },
+    {
+      "id": 6,
+      "name": "Golden Essence",
+      "image": "images/bottle6.png",
+      "price": 110,
+      "category": "Combo",
+      "gender": "For Him"
+    }
+  ]
+}

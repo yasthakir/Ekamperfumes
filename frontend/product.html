@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product View - Aurora Perfumes</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* --- STYLISH NEW PALETTE & BASE --- */
+:root {
+  --primary:#caa97a; /* Gold/Tan */
+  --secondary:#e6d2b2; /* Light Gold/Cream */
+  --bg:#f8f9fa; /* Very Light Gray Background */
+  --muted:#7b6f6a;
+  --star-color:#FFBB00; /* Richer Gold Star */
+  --shadow-light: 0 5px 20px rgba(0,0,0,0.05);
+  --shadow-dark: 0 20px 50px rgba(0,0,0,0.1);
+  --glass: rgba(255, 255, 255, 0.9); /* Opaque glass for header */
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:#222;overflow-x:hidden;}
+.container{max-width:1200px;margin:0 auto;padding:20px;}
+
+/* --- HEADER STYLES --- */
+header {
+    display:flex;justify-content:space-between;align-items:center;padding:12px 25px;
+    background:var(--glass);backdrop-filter:blur(8px);
+    position:sticky;top:10px;z-index:1000;
+    box-shadow:var(--shadow-light);border-radius:15px; /* Added rounded header */
+    margin-bottom: 20px;
+}
+.header-left .back-btn {
+    font-size:18px;background:linear-gradient(135deg,var(--primary),var(--secondary));
+    color:var(--strong-dark, #111); /* Darker text for contrast on gold */
+    border:none;border-radius:50%;width:40px;height:40px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition: transform 0.2s;
+}
+.header-left .back-btn:hover { transform: scale(1.1); }
+.header-right { display:flex; align-items:center; gap:12px; }
+.header-right button {
+    background:var(--secondary);border:none;padding:8px;
+    border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:18px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: all 0.2s;
+}
+.header-right button:hover { background:var(--primary); transform: translateY(-2px); }
+
+/* --- PRODUCT VIEW STYLES --- */
+.product-view-container {
+    display: grid;grid-template-columns: 1fr 1.2fr;gap: 50px;align-items: flex-start; /* Align to top */
+    padding: 30px; background: white; border-radius: 20px; box-shadow: var(--shadow-dark);
+}
+.product-image-section {
+    position: relative; /* For the subtle shadow effect */
+}
+.product-image-section img {
+    width: 100%;max-width: 450px; /* Cap image size */
+    border-radius:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+    animation:floatImage 4s ease-in-out infinite;
+    transform-origin: center center; /* Ensure smooth float */
+}
+@keyframes floatImage {0%,100%{transform:translateY(0) rotate(1deg);}50%{transform:translateY(-15px) rotate(-1deg);}}
+
+.product-info {
+    padding-top: 10px; /* Align content nicely */
+}
+.product-info h1 { 
+    font-family: 'Playfair Display', serif; font-size:3rem; margin-bottom:10px; color: var(--strong-dark, #111);
+}
+.product-info .price { font-size:2.5rem; font-weight:700; margin-bottom:20px; color:var(--primary); }
+.product-info .description { font-size:1rem; margin-bottom:30px; line-height: 1.8; color: var(--muted); }
+.product-meta { 
+    margin-bottom: 10px; font-size: 0.95rem; color: var(--muted); padding-left: 5px; 
+}
+.product-meta strong { color: var(--strong-dark, #333); font-weight: 500; }
+.in-stock { color: #2ecc71; font-weight: 600; }
+.out-of-stock { color: #e74c3c; font-weight: 600; }
+
+/* --- ACTION BUTTONS --- */
+.product-actions { margin-top: 20px; }
+.product-actions button {
+    padding:14px 30px;border:none;border-radius:30px;cursor:pointer;
+    font-weight:700;margin:5px 10px 5px 0; transition: all 0.3s ease;
+    font-size: 1rem;
+}
+.add-cart { 
+    background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white;
+    box-shadow: 0 4px 15px rgba(202, 169, 122, 0.4);
+}
+.add-cart:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(202, 169, 122, 0.6); }
+#fav-btn { 
+    background:white;border:2px solid var(--primary); color: var(--primary);
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 20px;
+}
+#fav-btn:hover { background:var(--primary); color:white; transform:scale(1.05); }
+#fav-btn.favorited { 
+    background: var(--primary); color: white; border-color: white;
+}
+.add-cart:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
+
+/* --- REVIEWS SECTION --- */
+.reviews-section { 
+    margin-top: 40px; padding: 40px; background: white; border-radius: 20px; 
+    box-shadow: var(--shadow-light); 
+}
+.reviews-section h3 { 
+    text-align: center; margin-bottom: 25px; 
+    font-family: 'Playfair Display', serif; font-size: 1.8rem;
+    color: var(--strong-dark, #111);
+}
+.stars { display:flex;justify-content:center;gap:10px;margin-bottom:20px; }
+.stars span { 
+    font-size:36px; cursor:pointer; color:#e0e0e0; transition:.3s; 
+    line-height: 1;
+}
+.stars span.selected, .stars span:hover, .stars span:hover ~ span { color:var(--star-color); }
+
+.review-form { 
+    margin-top:20px; display:flex; flex-direction:column; gap:15px; max-width:600px; margin:auto; 
+    padding: 20px; border: 1px dashed var(--secondary); border-radius: 15px;
+}
+.review-form textarea { 
+    padding:15px;border-radius:15px;border:1px solid #ddd;width:100%;height:100px; 
+    resize:none; font-family: 'Poppins', sans-serif; transition: border-color 0.3s;
+}
+.review-form textarea:focus { border-color: var(--primary); outline: none; }
+.review-form label { 
+    font-weight: 500; color: var(--muted); text-align: left; font-size: 0.9rem; margin-top: 5px; 
+}
+.review-form input[type="file"] { 
+    padding: 10px; border: 1px solid #ddd; border-radius: 12px; background-color: #f9f9f9; 
+}
+.review-form button { 
+    padding:12px 20px;border:none;border-radius:30px;background:var(--primary); color:white; 
+    cursor:pointer; transition:.3s; font-weight: 600;
+}
+.review-form button:hover { background: var(--strong-dark, #111); }
+
+.reviews-list-container { margin-top: 50px; max-width: 800px; margin-left: auto; margin-right: auto;}
+.reviews-title { 
+    font-family: 'Playfair Display', serif; margin-bottom: 25px; text-align: left; 
+    font-size: 1.8rem; color: var(--strong-dark, #111); border-bottom: 2px solid var(--secondary); padding-bottom: 5px;
+}
+.review-item { 
+    border-bottom: 1px solid #eee; padding: 20px 0; display: flex; gap: 20px; align-items: flex-start; 
+}
+.review-item:last-child { border-bottom: none; }
+.review-content { flex: 1; }
+.review-author { font-weight: 600; margin-bottom: 5px; color: var(--primary); }
+.review-stars { color: var(--star-color); margin-bottom: 8px; font-size: 1.2rem;}
+.review-comment { color: var(--muted); line-height: 1.6; }
+.review-image { 
+    width: 120px; height: 120px; border-radius: 15px; object-fit: cover; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* --- SIMILAR PRODUCTS --- */
+.similar-products { margin-top: 60px; padding: 20px; }
+.similar-products h2 { 
+    text-align: center; margin-bottom: 40px; 
+    font-family: 'Playfair Display', serif; font-size: 2.5rem; 
+    color: var(--strong-dark, #111);
+}
+.products-grid { 
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; 
+}
+.product-card { 
+    background: white; border-radius: 18px; text-align: center; cursor: pointer; 
+    transition: .3s; box-shadow: var(--shadow-light); overflow: hidden; 
+}
+.product-card:hover { transform: translateY(-7px); box-shadow: var(--shadow-dark); }
+.product-card img { 
+    width: 100%; height: 200px; object-fit: cover; border-bottom: 3px solid var(--secondary);
+}
+.product-card h4 { margin: 12px 0; font-size: 1.1rem; padding: 0 10px; font-weight: 500;}
+.product-card .price { color: var(--primary); font-weight: 700; margin-bottom: 18px; font-size: 1.2rem; }
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
+@media(max-width:992px){
+    .product-view-container { grid-template-columns: 1fr; gap: 30px; padding: 20px; }
+    .product-image-section img { max-width: 300px; margin: 0 auto; display: block; }
+    .product-info { text-align: center; }
+    .product-info h1 { font-size: 2.2rem; }
+    .product-info .price { font-size: 2rem; }
+    .product-actions { display: flex; flex-direction: column; align-items: center; }
+    .product-actions button { margin: 5px 0; width: 80%; max-width: 300px; }
+    .reviews-list-container { max-width: 100%; }
+    .review-item { flex-direction: column; align-items: center; text-align: center; }
+}
+@media(max-width:576px){ 
+    .container { padding: 10px; }
+    header { top: 0; border-radius: 0; padding: 10px 15px; }
+    .product-view-container { box-shadow: none; border-radius: 0; padding: 10px; }
+    .reviews-section { padding: 20px 10px; border-radius: 10px; }
+    .product-image-section img { max-width: 250px; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .review-image { width: 80px; height: 80px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-left"><button class="back-btn" onclick="window.history.back();">←</button></div>
+    <h2 style="font-family:'Playfair Display', serif;">Aurora Product Details</h2>
+    <div class="header-right">
+        <button onclick="window.location.href='fav.html'">
+            <i data-feather="heart"></i> 
+        </button>
+        <button onclick="window.location.href='cart.html'">
+            <i data-feather="shopping-cart"></i>
+        </button>
+        <button onclick="window.location.href='profile.html'">
+            <i data-feather="user"></i>
+        </button>
+    </div>
+  </header>
+
+  <main class="product-view-container">
+    <div class="product-image-section">
+        <img id="product-img" src="https://placehold.co/600x600/f0f0f0/ccc?text=Loading..." alt="Product image">
+    </div>
+    <div class="product-info">
+      <h1 id="product-name">Loading...</h1>
+      <p class="price" id="product-price">--</p>
+      
+      <div class="product-meta" id="product-stock"></div>
+      <div class="product-meta" id="product-delivery"></div>
+      
+      <p class="description" id="product-desc">Loading product details...</p>
+      
+      <div class="product-actions">
+        <button id="fav-btn">
+             <i data-feather="heart"></i> <span>Add to Favorites</span>
+        </button>
+        <button class="add-cart">Add to Cart</button>
+      </div>
+    </div>
+  </main>
+  
+  <section class="reviews-section">
+      <h3>Tell Us What You Think</h3>
+      <div class="stars"><span data-value="1">★</span><span data-value="2">★</span><span data-value="3">★</span><span data-value="4">★</span><span data-value="5">★</span></div>
+      <form class="review-form" id="reviewForm">
+        <textarea id="reviewText" placeholder="Share your experience with this scent..." required></textarea>
+        <label for="reviewImage">Upload an image to show off your purchase (optional)</label>
+        <input type="file" id="reviewImage" accept="image/*">
+        <button type="submit">Submit Review</button>
+      </form>
+      <div class="reviews-list-container">
+          <h4 class="reviews-title">Customer Reviews</h4>
+          <div id="reviewsList">
+              </div>
+      </div>
+  </section>
+
+  <section class="similar-products">
+    <h2>Explore Similar Scents</h2>
+    <div class="products-grid" id="similar-grid"></div>
+  </section>
+</div>
+
+<script>
+    feather.replace();
+</script>
+
+<script>
+    // --- SIMULATED LOGGED-IN USER ---
+    // In a real app, you would get this data from localStorage after the user logs in.
+    const currentUser = {
+        _id: "60d5ecb4b7b3b3a4a4c7c8a4", // A sample user ID from your database
+        name: "Yasmin" // The user's name
+    };
+
+    // --- STAR RATING UI LOGIC ---
+    const stars = document.querySelectorAll(".stars span");
+    let currentRating = 0;
+    stars.forEach(star => {
+        star.addEventListener("click", () => {
+            currentRating = star.dataset.value;
+            stars.forEach((s, i) => s.classList.toggle("selected", i < currentRating));
+        });
+    });
+
+    // --- HELPER FUNCTIONS ---
+    function addToCart(product) {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const existing = cart.find(item => item._id === product._id);
+        if (existing) {
+            existing.quantity = (existing.quantity || 1) + 1;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert(`${product.name} was added to your cart!`);
+    }
+
+    function openProduct(productId) {
+        localStorage.setItem("productId", productId);
+        window.location.reload(); // Reload the page with the new product ID
+    }
+
+    function handleFavorites(product) {
+        const favBtn = document.getElementById("fav-btn");
+        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        const isFavorited = favorites.some(p => p._id === product._id);
+        
+        // Use feather icons for a sleek look
+        const favIconHtml = isFavorited 
+            ? '<i data-feather="heart" style="fill:white;"></i> <span>Favorited</span>' 
+            : '<i data-feather="heart"></i> <span>Add to Favorites</span>';
+
+        favBtn.innerHTML = favIconHtml;
+        feather.replace(); // Re-render feather icons
+        favBtn.classList.toggle("favorited", isFavorited);
+
+        favBtn.onclick = () => {
+            favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+            const index = favorites.findIndex(p => p._id === product._id);
+            if (index > -1) {
+                favorites.splice(index, 1);
+                favBtn.innerHTML = '<i data-feather="heart"></i> <span>Add to Favorites</span>';
+                favBtn.classList.remove("favorited");
+            } else {
+                favorites.push(product);
+                favBtn.innerHTML = '<i data-feather="heart" style="fill:white;"></i> <span>Favorited</span>';
+                favBtn.classList.add("favorited");
+            }
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            feather.replace(); // Re-render feather icons
+        };
+    }
+
+    // --- REVIEW SUBMISSION ---
+    document.getElementById("reviewForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const productId = localStorage.getItem("productId");
+        const comment = document.getElementById("reviewText").value;
+        const image = document.getElementById("reviewImage").files[0];
+
+        if (!comment || currentRating === 0) {
+            alert("Please provide a rating and a review text.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("product", productId);
+        formData.append("rating", currentRating);
+        formData.append("comment", comment);
+        formData.append("user", currentUser._id);
+        formData.append("username", currentUser.name);
+        if (image) {
+            formData.append("image", image);
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/reviews`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                alert("Thank you for your review!");
+                document.getElementById("reviewForm").reset();
+                stars.forEach(s => s.classList.remove("selected"));
+                currentRating = 0;
+                fetchReviews(productId); // Refresh the reviews list immediately
+            } else {
+                const errorData = await response.json();
+                alert(`Failed to submit review: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error("Review submission error:", error);
+            alert("Could not submit review. Please try again later.");
+        }
+    });
+
+    // --- REVIEW DISPLAY ---
+    function renderReviews(reviews) {
+        const reviewsListEl = document.getElementById("reviewsList");
+        if (!reviewsListEl) return;
+
+        if (reviews.length === 0) {
+            reviewsListEl.innerHTML = "<p style='text-align:center; color:var(--muted); padding: 20px 0;'>No reviews yet. Be the first to share your thoughts!</p>";
+            return;
+        }
+
+        reviewsListEl.innerHTML = reviews.map(review => `
+            <div class="review-item">
+                <div class="review-content">
+                    <p class="review-author">${review.username}</p>
+                    <div class="review-stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+                    <p class="review-comment">${review.comment}</p>
+                </div>
+                ${review.image ? `<img src="http://localhost:5000${review.image}" alt="Review image" class="review-image">` : ''}
+            </div>
+        `).join('');
+    }
+
+    async function fetchReviews(productId) {
+        try {
+            const response = await fetch(`http://localhost:5000/api/reviews/${productId}`);
+            if (!response.ok) throw new Error('Could not fetch reviews');
+            const reviews = await response.json();
+            renderReviews(reviews);
+        } catch (error) {
+            console.error("Error fetching reviews:", error);
+        }
+    }
+
+    // --- SIMILAR PRODUCTS ---
+    function renderSimilarProducts(products) {
+        const grid = document.getElementById('similar-grid');
+        grid.innerHTML = "";
+        if (products.length === 0) {
+            grid.innerHTML = "<p style='text-align:center; color:var(--muted);'>No similar products found.</p>";
+            return;
+        }
+
+        products.forEach(p => {
+            const card = document.createElement("div");
+            card.className = "product-card";
+            card.innerHTML = `
+                <img src="http://localhost:5000${p.image}" alt="${p.name}" onerror="this.onerror=null;this.src='https://placehold.co/200x200/ccc/fff?text=No+Image'">
+                <h4>${p.name}</h4>
+                <p class="price">₹${p.price}</p>`;
+            card.addEventListener('click', () => openProduct(p._id));
+            grid.appendChild(card);
+        });
+    }
+
+    async function loadSimilarProducts(category, currentProductId) {
+        try {
+            // NOTE: This assumes a backend route /api/products?category=:category exists
+            const res = await fetch(`http://localhost:5000/api/products?category=${category}`);
+            let similar = (await res.json())
+                .filter(p => p._id !== currentProductId)
+                .slice(0, 4);
+            renderSimilarProducts(similar);
+        } catch (error) {
+            console.error("Could not load similar products:", error);
+            renderSimilarProducts([]);
+        }
+    }
+
+    // --- MAIN FUNCTION TO LOAD PAGE ---
+    async function loadProduct() {
+        const productId = localStorage.getItem("productId");
+        if (!productId) {
+            document.querySelector('.product-view-container').innerHTML = '<h1>Product ID not found. Please select a product from the main page.</h1>';
+            document.querySelector('.reviews-section').style.display = 'none';
+            document.querySelector('.similar-products').style.display = 'none';
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/products/${productId}`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const product = await response.json();
+
+            // Populate Product Info
+            document.getElementById("product-name").textContent = product.name;
+            document.getElementById("product-price").textContent = `₹${product.price}`;
+            document.getElementById("product-img").src = `http://localhost:5000${product.image}`;
+            document.getElementById("product-desc").textContent = product.description;
+
+            const stockEl = document.getElementById("product-stock");
+            if (product.isInStock) {
+                stockEl.innerHTML = `<strong>Availability:</strong> <span class="in-stock">In Stock</span>`;
+            } else {
+                stockEl.innerHTML = `<strong>Availability:</strong> <span class="out-of-stock">Out of Stock</span>`;
+            }
+
+            const deliveryEl = document.getElementById("product-delivery");
+            deliveryEl.innerHTML = `<strong>Delivery:</strong> <span>${product.deliveryTime || '3-5 business days'}</span>`;
+            
+            const cartBtn = document.querySelector(".add-cart");
+            if (!product.isInStock) {
+                cartBtn.disabled = true;
+                cartBtn.textContent = "Out of Stock";
+            } else {
+                cartBtn.disabled = false;
+                cartBtn.textContent = "Add to Cart";
+                cartBtn.onclick = () => addToCart(product);
+            }
+
+            // Initialize buttons and load related data
+            handleFavorites(product);
+            loadSimilarProducts(product.category, product._id);
+            fetchReviews(productId); // Load existing reviews
+
+        } catch (error) {
+            console.error("Failed to load product:", error);
+            document.querySelector('.product-view-container').innerHTML = '<h1>Could not load product details. Please try again later.</h1>';
+        }
+    }
+
+    // Load everything when the page is ready
+    window.addEventListener("DOMContentLoaded", loadProduct);
+</script>
+</body>
+</html>

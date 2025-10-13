@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurora Perfumes – Premium Fragrances</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#caa97a;
+  --secondary:#e6d2b2;
+  --bg:#fdfbf7;
+  --card:#fff;
+  --muted:#7b6f6a;
+  --glass: rgba(255,255,255,0.35);
+  --shadow:0 10px 25px rgba(0,0,0,0.08);
+  --accent-glow: rgba(202,169,122,0.35);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:#222;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+.container{max-width:1300px;margin:0 auto;padding:20px;}
+
+/* Header (Desktop Default) */
+header{
+  position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:15px 30px;
+  backdrop-filter:blur(14px);background:var(--glass);border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,0.1);
+  transition:all 0.3s ease;
+}
+header:hover{background:rgba(255,255,255,0.55);}
+.brand{display:flex;align-items:center;gap:15px;}
+.logo{font-family:'Playfair Display';font-weight:700;font-size:28px;color:white;
+background:linear-gradient(135deg,var(--primary),var(--secondary));padding:12px;border-radius:14px;box-shadow:0 8px 22px rgba(0,0,0,0.1);
+animation:logoGlow 3s ease-in-out infinite alternate;text-align:center;width:50px;height:50px;display:flex;justify-content:center;align-items:center;}
+@keyframes logoGlow{0%{box-shadow:0 0 10px var(--primary);}50%{box-shadow:0 0 18px var(--secondary);}100%{box-shadow:0 0 10px var(--primary);}}
+nav{display:flex;gap:22px;}
+nav a{position:relative;font-weight:500;color:var(--muted);transition:all .3s;}
+nav a::after{content:'';position:absolute;left:0;bottom:-3px;width:0;height:2px;background:var(--primary);transition:width .3s;}
+nav a:hover::after{width:100%;}
+.icon-btn{background:rgba(255,255,255,0.2);border:none;padding:6px 10px;border-radius:12px;cursor:pointer;transition:.3s;font-size:18px;}
+.icon-btn:hover{transform:scale(1.2);background:rgba(255,255,255,0.35);}
+#hamburger{display:none;font-size:26px;background:transparent;border:none;cursor:pointer;}
+.nav-close-btn{display: none;}
+/* === MOBILE NAV MENU FIX: Hamburger Left, Logo Center, Menu Slide from Left === */
+@media(max-width:768px){
+  header { 
+    padding: 15px 20px;
+    position: sticky; /* Keep sticky for mobile */
+    justify-content: space-between;
+  }
+  
+  /* Layout ordering for mobile view */
+  .brand {
+    position: absolute; /* Take out of flow to center independently */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001; /* Above other content but below nav menu when open */
+  }
+  .actions { order: 3; }
+  #hamburger { 
+    display: block;
+    order: 1; 
+    z-index: 1001; 
+  }
+  
+  /* Menu itself: start off-screen left and slide in */
+  nav{
+    display:none;
+    flex-direction:column;
+    gap:12px;
+    position:fixed; /* Fixed position to cover entire vertical space */
+    top: 0; 
+    left: -100%; /* Start off-screen to the left */
+    right: auto; /* Ensure it doesn't conflict with right positioning */
+    width: 70%; /* Menu covers 70% of the screen */
+    height: 100vh; /* Full screen height */
+    background:rgba(255,255,255,0.9); /* Slightly more opaque for visibility */
+    padding: 80px 20px 20px; /* Padding for content below where header would be */
+    border-radius: 0 16px 16px 0; /* Rounded right corner */
+    backdrop-filter:blur(12px);
+    box-shadow: 10px 0 30px rgba(0,0,0,0.2); /* Shadow on the right edge */
+    z-index: 1002; /* Higher z-index to cover header content */
+    transition: left 0.3s ease-in-out; /* Slide animation */
+  }
+  nav.show{
+    display:flex;
+    left: 0; /* Slide into view */
+  }
+
+  /* Added style for the close button */
+  .nav-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 32px;
+    color: var(--muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+/* ========== Search Section Below Header ========== */
+.search-section {
+  width: 100%;
+  background: #f5f5f5;
+  padding: 15px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.search-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px 0 0 8px;
+  outline: none;
+}
+
+.search-bar button {
+  padding: 10px 14px;
+  border: none;
+  background: #111;
+  color: white;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.search-bar button:hover {
+  background: #333;
+}
+
+
+/* Desktop (default) */
+.hamburger {
+  display: none;
+}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:30px;margin:30px 0;padding:30px;border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4));position:relative;overflow:hidden;}
+.hero-left{z-index:2;}
+.hero-left .eyebrow{font-size:14px;color:var(--muted);margin-bottom:1px;}
+.hero-left .headline{font-family:'Playfair Display';font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.1;display:flex;flex-wrap:wrap;gap:6px;}
+.hero-left .headline span{display:inline-block;opacity:0;transform:translateY(30px);animation:fadeUp 0.9s forwards;}
+.hero-left .headline span:nth-child(1){animation-delay:.1s;}span:nth-child(2){animation-delay:.3s;}span:nth-child(3){animation-delay:.5s;}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+.hero-left p{margin-top:18px;font-size:16px;color:#311904;line-height:1.5;}
+.cta-buttons{display:flex;gap:18px;margin-top:20px;align-items:center;}
+.cta-buttons a{padding:10px 20px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:12px;color:white;font-weight:600;transition:.3s;box-shadow:0 6px 20px var(--accent-glow);border: 1px solid rgb(255, 250, 250);}
+.cta-buttons a:hover{transform:scale(1.05);box-shadow:0 12px 25px var(--accent-glow);}
+.hero-right{position:relative;height:500px;}
+.bottle{position:absolute;transition:transform .5s ease;transform-origin:center;}
+.float1{animation:floatRotate1 6s ease-in-out infinite;}
+.float2{animation:floatRotate2 5s ease-in-out infinite;}
+.float3{animation:floatRotate3 7s ease-in-out infinite;}
+@keyframes floatRotate1{0%,100%{transform:translateY(0) rotateZ(0deg);}25%{transform:translateY(-8px) rotateZ(2deg);}50%{transform:translateY(-12px) rotateZ(-2deg);}75%{transform:translateY(-6px) rotateZ(1deg);}}
+@keyframes floatRotate2{0%,100%{transform:translateY(0) rotateZ(0deg);}25%{transform:translateY(-6px) rotateZ(-2deg);}50%{transform:translateY(-10px) rotateZ(2deg);}75%{transform:translateY(-4px) rotateZ(-1deg);}}
+@keyframes floatRotate3{0%,100%{transform:translateY(0) rotateZ(0deg);}25%{transform:translateY(-10px) rotateZ(1deg);}50%{transform:translateY(-14px) rotateZ(-1deg);}75%{transform:translateY(-8px) rotateZ(2deg);}}
+.sparkles{position:absolute;inset:0;pointer-events:none;}
+.sparkle{position:absolute;width:5px;height:5px;border-radius:50%;background:white;opacity:.8;filter:drop-shadow(0 0 6px rgba(255,255,255,.7));animation:sparkleAnim 2s ease-in-out infinite alternate;}
+@keyframes sparkleAnim{0%{opacity:0.2;transform:translateY(0) scale(1);}100%{opacity:1;transform:translateY(-6px) scale(1.2);}}
+/* Desktop layout (default split) */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 30px;
+  margin: 30px 0;
+  padding: 30px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+  position: relative;
+  overflow: hidden;
+}
+
+/* Mobile: overlap bottles under text + button */
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr; /* Add missing grid collapse */
+    text-align: center;
+    padding: 200px 20px;
+    padding-bottom: 150px;
+    background-color: #fdfbf7;
+    position: relative;
+  }
+
+  .hero-right {
+    position: absolute;
+    top: 20%; left: 25%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    opacity: 0.8; 
+    z-index: 1;
+  }
+  .hero-left .eyebrow{
+    display: none;
+  }
+
+  .hero-right img {
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-left {
+    display: block;
+    position: relative;
+    top: 40%;
+    z-index: 2; 
+  }
+  
+  .hero-left .headline {
+    padding-top: 120px;
+    text-align: center;
+    align-content: center;
+    color: #4a4037;
+  }
+
+  .hero-left p {
+    color: #101010;
+  }
+
+  .cta-buttons a {
+    position: relative;
+    z-index: 3;
+  }
+}
+
+
+/* --- NEW --- Favorite button selected state */
+.fav-btn.selected {
+    color: #ff4b4b;
+    border-color: #ff4b4b;
+}
+
+/* --- Styles for the Offer Zone --- */
+.offer-zone-container {
+    padding: 40px 0;
+}
+.offer-zone {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 42px;
+    box-shadow: 0 14px 40px rgba(33,41,79,0.08);
+    text-align: center;
+    transform-origin: center center;
+    opacity: 0;
+    transform: scale(0.96);
+}
+.offer-zone h2 {
+    font-size: 2.4rem;
+    margin: 0 0 6px;
+    color: #243142;
+    letter-spacing: -0.3px;
+    transform: translateY(8px);
+    opacity: 0;
+}
+.offer-zone .subtitle {
+    color: #677083;
+    margin-bottom: 24px;
+    opacity: 0;
+    transform: translateY(8px);
+}
+.product-grid-wrapper {
+    position: relative;
+    height: 380px;
+    margin: 18px 0 28px;
+    perspective: 1400px;
+    overflow: visible;
+}
+.offer-zone .product-card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 220px;
+    height: 350px;
+    border-radius: 14px;
+    overflow: hidden;
+    transform: translate(-50%,-50%) scale(0.92);
+    box-shadow: 0 12px 30px rgba(33,41,79,0.12);
+    visibility: hidden;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    cursor: pointer; /* Added for click interaction */
+    background: linear-gradient(180deg,#fff,#fbfbfc);
+}
+.offer-zone .product-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+}
+.code-box {
+    padding-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.code-text {
+    font-weight: 700;
+    color: #243142;
+    font-size: 18px;
+}
+/* Removed individual copy-btn styles, as the card will handle the copy action */
+.copy-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    background: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+}
+.copy-btn:hover {
+    background: #45a049;
+}
+
+/* Offer Zone Responsive Adjustments */
+@media (max-width: 768px) {
+  /* Hide the default copy button wrapper on mobile to make way for new buttons */
+  .code-box {
+    display: none;
+  }
+  
+  /* Style for the new mobile action buttons */
+  .mobile-offer-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .mobile-offer-actions button {
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+  }
+  
+  .mobile-offer-actions .change-btn {
+    background: var(--secondary);
+    color: #222;
+  }
+  
+  .mobile-offer-actions .copy-btn-mobile {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 10px var(--accent-glow);
+  }
+
+  /* Reduce wrapper height for tighter mobile view */
+  .product-grid-wrapper { height: 280px; }
+  .offer-zone .product-card { 
+      width: 180px; 
+      height: 280px;
+      transform: translate(-50%,-50%); /* Start stacked at center */
+  }
+}
+@media (min-width: 769px) {
+  /* Ensure mobile actions are hidden on desktop */
+  .mobile-offer-actions {
+    display: none;
+  }
+}
+
+@media (max-width:820px){
+    .product-grid-wrapper { height: 320px; }
+    .offer-zone .product-card { width: 180px; height: 280px;}
+    .code-text { font-size: 16px; }
+}
+@media (max-width: 580px){
+    .offer-zone { padding: 30px 15px; } 
+    .product-grid-wrapper { height: 250px; margin: 10px 0 20px; } 
+    .offer-zone .product-card { width: 150px; height: 220px; } 
+    .offer-zone h2 { font-size: 1.8rem; }
+    .offer-zone .subtitle { font-size: 0.9rem; }
+}
+
+/* Category Section */
+.categories {
+  padding: 60px 20px;
+  background: #fafafa;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 32px;
+  margin-bottom: 40px;
+  font-family: 'Playfair Display', serif;
+  color: #222;
+  animation: fadeDown 1s ease;
+}
+
+/* Grid */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+/* Category Card */
+.category-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  display: block;
+  text-decoration: none;
+  color: white;
+  transform: translateY(40px) scale(0.95);
+  opacity: 0;
+
+  /* Fade in on scroll + float idle continuously */
+  animation: fadeUp 0.8s ease forwards, floatIdle 6s ease-in-out infinite;
+}
+
+.category-card:nth-child(1) { animation-delay: 0.2s, 0s; }
+.category-card:nth-child(2) { animation-delay: 0.4s, 0s; }
+.category-card:nth-child(3) { animation-delay: 0.6s, 0s; }
+.category-card:nth-child(4) { animation-delay: 0.8s, 0s; }
+
+.category-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+/* Hover Animations */
+.category-card:hover img {
+  transform: scale(1.12) rotate(-2deg);
+}
+
+.category-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  transition: transform 0.4s ease;
+}
+
+/* Overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.1));
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 20px;
+}
+
+.overlay h3 {
+  font-size: 22px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.6);
+}
+
+.category-card:hover .overlay h3 {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Floating effect for idle animation */
+@keyframes floatIdle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .category-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .category-card img {
+    height: 220px;
+  }
+}
+
+@media (max-width: 640px) {
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-card img {
+    height: 200px;
+  }
+}
+
+/* Top Collection Section */
+.top-collection{ padding:60px 20px; }
+.collection-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.collection-header h2{ font-size:28px; font-family:'Playfair Display', serif; }
+.collection-header .more-btn{ color:var(--primary); text-decoration:none; font-weight:600; }
+.scroll-container{ overflow-x:auto; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; padding-bottom:10px; }
+.scroll-container::-webkit-scrollbar{display:none;}
+.scroll-track{ display:flex; gap:24px; }
+
+.product-card-scroll {
+  flex: 0 0 200px;
+  width: 200px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+.product-card-scroll img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+.product-card-scroll h4 {
+  font-weight: 600;
+  padding: 12px 0 8px 0;
+  font-size: 16px;
+}
+.product-card-scroll .price {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 12px;
+}
+.product-card-scroll .add-cart {
+  padding: 8px 16px;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+  /* Filter Section */
+    .filter-section {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      padding:15px 20px;
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.05);
+      margin-bottom:30px;
+    }
+    .filter-group {
+      display:flex;
+      align-items:center;
+      gap:6px;
+      white-space:nowrap;
+    }
+    .filter-group label {
+      font-weight:600;
+      font-size:14px;
+      color:var(--muted);
+    }
+    .filter-group select {
+      padding:8px 12px;
+      border-radius:8px;
+      border:1px solid #ddd;
+      background:#fff;
+      cursor:pointer;
+      font-weight:500;
+      transition:.3s;
+    }
+    .filter-group select:focus {
+      border-color:var(--primary);
+      box-shadow:0 0 8px rgba(202,169,122,0.3);
+      outline:none;
+    }
+
+    /* Product Grid */
+    .products-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+  gap:20px;
+}
+
+.product-card-grid {
+  background:#fff;
+  border-radius:16px;
+  padding:15px;
+  text-align:center;
+  box-shadow:0 6px 20px rgba(0,0,0,0.05);
+  transition:.3s;
+}
+.product-card-grid:hover {
+  transform:translateY(-5px);
+  box-shadow:0 12px 25px rgba(0,0,0,0.1);
+}
+.product-card-grid img {
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-bottom:12px;
+}
+.product-card-grid h4 {font-size:16px;margin:8px 0;font-weight:600;}
+.product-card-grid .price {font-weight:700;color:#333;margin-bottom:12px;}
+.product-card-grid .add-cart {
+  padding:8px 14px;
+  border-radius:10px;
+  border:none;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+
+   
+    .add-btn:hover {
+      transform:translateY(-2px);
+      box-shadow:0 6px 18px rgba(202,169,122,0.35);
+    }
+
+    /* Responsive Grid */
+    @media(max-width:1200px){
+      .products-grid{grid-template-columns:repeat(4,1fr);}
+    }
+    @media(max-width:768px){
+      .products-grid{grid-template-columns:repeat(2,1fr);}
+      
+      .filter-section {
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        justify-content:flex-start;
+        gap:12px;
+        padding:12px;
+        scrollbar-width:none;
+      }
+      .filter-section::-webkit-scrollbar {display:none;}
+      
+      .filter-group {
+        flex-direction:column;
+        align-items:flex-start;
+        background:#f9f9f9;
+        padding:8px 10px;
+        border-radius:10px;
+        flex-shrink:0;
+      }
+      .filter-group label {font-size:12px;}
+      .filter-group select {font-size:13px;}
+    }
+
+/* Footer Styles */
+.footer {
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(250,250,250,0.95));
+  padding: 60px 20px 30px 20px;
+  color: #333;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.footer h4 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-family: 'Playfair Display', serif;
+}
+
+.footer p, .footer ul li {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #555;
+}
+
+.footer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer ul li {
+  margin-bottom: 10px;
+}
+
+.footer ul li a {
+  color: #555;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.footer ul li a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+
+.footer ul li a:hover::after {
+  width: 100%;
+}
+
+.footer ul li a:hover {
+  color: var(--primary);
+}
+
+.footer-brand .logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 32px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 12px;
+  border-radius: 14px;
+  display: inline-block;
+  color: white;
+  text-align: center;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.footer-socials a {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.footer-socials a:hover {
+  transform: translateY(-6px) scale(1.1);
+  box-shadow: 0 8px 20px rgba(202,169,122,0.35);
+}
+
+.footer-bottom {
+  margin-top: 40px;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Footer Responsive Adjustments */
+@media (max-width: 900px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
+  }
+}
+@media (max-width: 600px) {
+  .footer-container {
+    grid-template-columns: 1fr; /* 1 column on mobile */
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+}
+
+@media (max-width:980px){.hero{grid-template-columns:1fr;}.products{grid-template-columns:repeat(2,1fr)}.headline{font-size:42px}}
+@media (max-width:640px){.products{grid-template-columns:1fr}.logo{width:44px;height:44px}.headline{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="container">
+ 
+  <header>
+    <div class="brand">
+      <div class="logo">A</div>
+    </div>
+    <nav>
+      <!-- Added close button to the mobile menu -->
+      <button class="nav-close-btn" id="navCloseBtn">&times;</button>
+      <a href="#">Home</a>
+      <a href="#products">Shop</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button id="hamburger">☰</button>
+
+    <div class="actions">
+      <a href="fav.html">
+        <button class="icon-btn">♡</button>
+      </a>
+      <a href="cart.html">
+        <button class="icon-btn">🛒</button>
+      </a>
+      <a href="profile.html">
+        <button class="icon-btn">👤</button>
+      </a>
+    </div>
+  </header>
+
+  <section class="search-section">
+    <div class="container">
+      <div class="search-bar">
+        <input type="text" placeholder="Search perfumes...">
+        <button type="submit">🔍</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">New arrivals · Limited edition</div>
+      <h1 class="headline">
+        <span>Capture</span> <span>the</span> <span>Essence</span>
+      </h1>
+      <p>Discover handcrafted scents inspired by sunlit gardens and warm amber nights.</p>
+      <div class="cta-buttons">
+        <a href="#products">Shop Now</a>
+        <a href="#about" style="color:var(--muted);font-weight:600;">Learn More →</a>
+      </div>
+    </div>
+    <div class="hero-right">
+       <!-- Hero Images updated with placeholders -->
+       <div class="bottle float1" style="left:20%; top:40px; width:510px; height:510px;">
+          <img src="images/bottle2.png" alt="Amber Dusk" style="width:90%; height:600px; object-fit:contain;">
+        </div>
+        <div class="bottle float2" style="left:-20%; top:40px; width:510px; height:510px;">
+          <img src="images/bottle3.png" alt="Rose Veil" style="width:90%; height:600px; object-fit:contain;">
+        </div>
+        <div class="bottle float3" style="left:0%; top:40px; width:510px; height:150px;">
+          <img src="images/bottle4.png" alt="Azure Bloom" style="width:90%; height:600px; object-fit:contain;">
+        </div>
+  </section>
+  
+<section class="offer-zone-container">
+    <div class="offer-zone">
+      <h2>UNLIMITED OFFERS</h2>
+      <p class="subtitle">Our best selling products Collection</p>
+  
+      <div class="product-grid-wrapper" id="gridWrap">
+          </div>
+          
+      <!-- New mobile action buttons for the offer zone -->
+      <div class="mobile-offer-actions">
+        <!-- Initial button text updated by JS after fetching offers -->
+        <button class="change-btn" id="changeCardBtn">Change Card</button>
+        <button class="copy-btn-mobile" id="copyCodeBtn">Copy Code</button>
+      </div>
+  </div>
+</section>
+  
+  <section class="categories">
+    <h2 class="section-title">Shop by Category</h2>
+    <div class="category-grid">
+      <a href="forhim.html" class="category-card">
+        <img src="images/forhim.png" alt="For Him">
+        <div class="overlay"><h3>For Him</h3></div>
+      </a>
+      <a href="forher.html" class="category-card">
+        <img src="images/forher.png" alt="For Her">
+        <div class="overlay"><h3>For Her</h3></div>
+      </a>
+      <a href="gifts.html" class="category-card">
+        <img src="images/gift.png" alt="Gifts">
+        <div class="overlay"><h3>Gifts</h3></div>
+      </a>
+      <a href="signature.html" class="category-card">
+        <img src="images/sign.png" alt="Signature">
+        <div class="overlay"><h3>Signature</h3></div>
+      </a>
+    </div>
+  </section>
+
+  <section class="top-collection">
+    <div class="collection-header">
+      <h2>Top Collection</h2>
+      <a href="signature.html" class="more-btn">More View →</a>
+    </div>
+    <div class="scroll-container" id="topScroll">
+      <div class="scroll-track" id="topCollectionGrid">
+      </div>
+    </div>
+  </section>
+
+  <div class="filter-section">
+      <div class="filter-group">
+        <label for="gender">Gender:</label>
+        <select id="gender">
+          <option>All</option>
+          <option>For Him</option>
+          <option>For Her</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="category">Category:</label>
+        <select id="category">
+          <option>All</option>
+          <option>Gift</option>
+          <option>Signature</option>
+          <option>Combo</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="sort">Sort By:</label>
+        <select id="sort">
+          <option>Popularity</option>
+          <option>Newest</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="columns">Columns:</label>
+        <select id="columns">
+          <option>6</option>
+          <option>4</option>
+          <option>2</option>
+        </select>
+      </div>
+    </div>
+  
+    <section class="products-grid" id="productsGrid">
+    </section>
+
+</div> 
+<footer class="footer">
+<div class="footer-container">
+  <div class="footer-brand">
+    <div class="logo">A</div>
+    <p>Premium handcrafted fragrances inspired by nature and elegance. Experience luxury in every scent.</p>
+  </div>
+
+  <div class="footer-links">
+    <h4>Quick Links</h4>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#products">Shop</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-categories">
+    <h4>Categories</h4>
+    <ul>
+      <li><a href="#him">For Him</a></li>
+      <li><a href="#her">For Her</a></li>
+      <li><a href="#gifts">Gifts</a></li>
+      <li><a href="#signature">Signature</a></li>
+      <li><a href="#combo">Combo</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-contact">
+    <h4>Contact Us</h4>
+    <p>Email: support@auroraperfumes.com</p>
+    <p>Phone: +91 98765 43210</p>
+    <div class="footer-socials">
+      <a href="#">🐦</a>
+      <a href="#">📘</a>
+      <a href="#">📸</a>
+      <a href="#">🎥</a>
+    </div>
+  </div>
+</div>
+
+<div class="footer-bottom">
+  <p>&copy; 2025 Aurora Perfumes. All rights reserved.</p>
+  <p>Designed with ❤️ by YourBrand</p>
+</div>
+</footer>
+
+<!-- Custom message box replacement for alert() -->
+<div id="custom-message" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 20px; border-radius:10px; z-index:2000; box-shadow:0 4px 12px rgba(0,0,0,0.3); font-size: 14px; opacity:0; pointer-events: none;"></div>
+
+<script>
+    // Global state to manage the cycle
+    let allOffers = []; 
+    let offerCardElements = []; // Store references to the 5 card DOM elements
+    let currentOfferIndex = 0;
+    const MAX_CARDS_ON_SCREEN = 5; // The number of elements rendered for the 3D effect
+    
+    // Custom message box replacement for alert()
+    function showMessage(message) {
+        const msgBox = document.getElementById('custom-message');
+        if (!msgBox) return;
+        msgBox.textContent = message;
+        msgBox.style.display = 'block';
+        
+        // Use GSAP for animation if available
+        gsap.fromTo(msgBox, {y: 20, autoAlpha: 0}, {y: 0, autoAlpha: 1, duration: 0.3});
+        
+        clearTimeout(window.msgTimeout);
+        window.msgTimeout = setTimeout(() => {
+            gsap.to(msgBox, {y: 20, autoAlpha: 0, duration: 0.3, onComplete: () => {
+                 msgBox.style.display = 'none';
+            }});
+        }, 3000);
+    }
+    
+    // Base URL for image paths
+    const imageBaseUrl = 'http://localhost:5000';
+
+    // Hamburger and Close button toggle
+    const hamburger = document.getElementById('hamburger');
+    const nav = document.querySelector('header nav');
+    const navCloseBtn = document.getElementById('navCloseBtn');
+
+    if (hamburger && nav && navCloseBtn) {
+        // Open menu
+        hamburger.addEventListener('click', () => nav.classList.toggle('show'));
+
+        // Close menu
+        navCloseBtn.addEventListener('click', () => nav.classList.remove('show'));
+
+        // Close menu when a link is clicked (for better mobile UX)
+        nav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('show');
+            });
+        });
+    }
+
+    // --- NEW/MODIFIED FUNCTION: Add product to cart ---
+    function addToCart(product) {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const existingProductIndex = cart.findIndex(item => item.id === product._id);
+
+        // Standardized item format for cart.html
+        const cartItem = {
+            id: product._id,
+            name: product.name,
+            price: product.price,
+            img: `${imageBaseUrl}${product.image}`, // Full image path
+            qty: 1
+        };
+
+        if (existingProductIndex > -1) {
+            cart[existingProductIndex].qty = (cart[existingProductIndex].qty || 1) + 1;
+        } else {
+            cart.push(cartItem);
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        showMessage(`${product.name} added to cart!`); // Replaced alert()
+    }
+
+    // --- NEW/MODIFIED FUNCTION: Toggle favorite status (add/remove) ---
+    function toggleFavoriteStatus(product, favBtn) {
+        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        const existingProductIndex = favorites.findIndex(item => item.id === product._id);
+        
+        // Standardized item format for fav.html
+        const favItem = {
+            id: product._id,
+            name: product.name,
+            price: product.price,
+            img: `${imageBaseUrl}${product.image}`, // Full image path
+        };
+
+
+        if (existingProductIndex > -1) {
+            // Product exists, so remove it
+            favorites.splice(existingProductIndex, 1);
+            favBtn.classList.remove('selected');
+        } else {
+            // Product doesn't exist, so add it
+            favorites.push(favItem);
+            favBtn.classList.add('selected');
+        }
+
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        showMessage(`Toggled favorite status for ${product.name}`); // Replaced alert()
+    }
+    
+    // Open product view page
+    function openProductView(productId) {
+        if (!productId) {
+            console.error("Invalid Product ID!");
+            return;
+        }
+        localStorage.setItem('productId', productId);
+        window.location.href = 'product.html';
+    }
+
+    // --- MODIFIED --- Render products and set initial favorite status
+    function renderProducts(products, containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        container.innerHTML = '';
+
+        products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = containerId === 'productsGrid' ? 'product-card-grid' : 'product-card-scroll';
+
+            // Check using the standardized ID key
+            const isFavorite = favorites.some(item => item.id === product._id);
+
+            card.innerHTML = `
+                <img src="${imageBaseUrl}${product.image}" alt="${product.name}">
+                <h4>${product.name}</h4>
+                <p class="price">₹${product.price}</p>
+                <div style="display: flex; gap: 8px; justify-content: center; align-items: center; padding: 0 10px;">
+                    <button class="add-cart" style="flex-grow: 1;">Add to Cart</button>
+                    <button class="fav-btn ${isFavorite ? 'selected' : ''}" style="background: white; border: 1px solid #ddd; border-radius: 10px; padding: 8px 12px; font-size: 16px; cursor: pointer; line-height: 1;">♡</button>
+                </div>
+            `;
+
+            // FIXED: Product View Listener on card click
+            card.addEventListener('click', () => openProductView(product._id));
+            
+            const cartBtn = card.querySelector('.add-cart');
+            const favBtn = card.querySelector('.fav-btn');
+
+            if (cartBtn) {
+                cartBtn.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    addToCart(product);
+                });
+            }
+
+            if (favBtn) {
+                favBtn.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    toggleFavoriteStatus(product, favBtn);
+                });
+            }
+            
+            container.appendChild(card);
+        });
+    }
+
+    // Fetch ALL products for the main grid
+    fetch('http://localhost:5000/api/products')
+        .then(response => response.json())
+        .then(products => {
+            window.allProducts = products; // Save for filtering
+            renderProducts(products, 'productsGrid');
+        })
+        .catch(error => console.error('Error fetching all products:', error));
+
+    // Fetch products for the TOP COLLECTION
+     fetch('http://localhost:5000/api/products')
+        .then(response => response.json())
+        .then(products => {
+            const topProducts = products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+            renderProducts(topProducts, 'topCollectionGrid'); 
+        })
+        .catch(error => console.error('Error fetching top collection:', error));
+
+    // --- FILTER FUNCTIONALITY ---
+    const genderSelect = document.getElementById('gender');
+    const categorySelect = document.getElementById('category');
+    const sortSelect = document.getElementById('sort');
+
+    function applyFilters() {
+        if (!window.allProducts) return;
+        
+        let filtered = [...window.allProducts];
+
+        // Ensure category and gender values match DB keys ('Men', 'Women', 'Unisex', etc.)
+        if (genderSelect && genderSelect.value !== 'All') {
+             const filterValue = genderSelect.value === 'For Him' ? 'Men' : 
+                                 genderSelect.value === 'For Her' ? 'Women' : genderSelect.value;
+            filtered = filtered.filter(p => p.gender === filterValue);
+        }
+        if (categorySelect && categorySelect.value !== 'All') {
+            filtered = filtered.filter(p => p.category === categorySelect.value);
+        }
+        if (sortSelect) {
+            const sort = sortSelect.value;
+            if (sort === 'Price: Low to High') filtered.sort((a, b) => a.price - b.price);
+            if (sort === 'Price: High to Low') filtered.sort((a, b) => b.price - a.price);
+            if (sort === 'Newest') filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+        
+        renderProducts(filtered, 'productsGrid');
+    }
+
+    [genderSelect, categorySelect, sortSelect].forEach(el => {
+        if(el) el.addEventListener('change', applyFilters);
+    });
+
+    // --- JAVASCRIPT FOR DYNAMIC OFFER ZONE ---
+
+// ----- Copy Code Function -----
+function copyCode(code){
+  // Use clipboard API and custom message
+  navigator.clipboard.writeText(code).then(() => {
+    showMessage("Copied code: " + code);
+  }).catch(err => {
+    console.error('Could not copy text: ', err);
+    showMessage("Failed to copy code.");
+  });
+}
+
+// Global variable to hold the GSAP animation timeline
+let offerAnimationTimeline = null;
+
+// Function to update the content of a single card DOM element
+function updateCardContent(cardElement, offer) {
+    if (!cardElement || !offer) return; // Added null check
+
+    cardElement.setAttribute('data-code', offer.code);
+    
+    // Safely update image source/alt
+    const imgElement = cardElement.querySelector('img');
+    if (imgElement) {
+        imgElement.src = `${imageBaseUrl}${offer.image}`;
+        imgElement.alt = `Offer code ${offer.code}`;
+    }
+
+    // Safely update desktop code text
+    const codeTextElement = cardElement.querySelector('.code-text');
+    if (codeTextElement) {
+        codeTextElement.textContent = offer.code;
+    }
+
+    // Set the desktop click handler
+    if (window.innerWidth > 768) {
+         cardElement.onclick = () => copyCode(offer.code);
+    }
+}
+
+// Function to update the mobile buttons based on the center card
+function updateMobileButtons(offer) {
+    const copyCodeBtn = document.getElementById('copyCodeBtn');
+    if (copyCodeBtn) {
+        copyCodeBtn.innerHTML = `Copy Code: ${offer.code}`;
+        copyCodeBtn.onclick = () => copyCode(offer.code);
+    }
+}
+
+// Function to cycle the center card content (Mobile logic)
+function cycleMobileOffer() {
+    if (allOffers.length === 0 || offerCardElements.length === 0) return;
+
+    // Use the middle card element (index 2 of the 5 rendered) as the target for the new offer
+    const targetCard = offerCardElements[2]; 
+
+    // Move to the next offer index
+    currentOfferIndex = (currentOfferIndex + 1) % allOffers.length;
+    const nextOffer = allOffers[currentOfferIndex];
+    
+    // 1. Animate the current center card out (to simulate replacing it)
+    const cycleTl = gsap.timeline({ defaults: { ease: "power1.inOut" } });
+
+    cycleTl.to(targetCard, {
+        duration: 0.25,
+        rotationZ: -5,
+        y: '-=15',
+        opacity: 0.5,
+        scale: 0.98,
+    });
+    
+    // 2. Update the content and button code immediately after the "out" animation starts
+    cycleTl.call(() => {
+        updateCardContent(targetCard, nextOffer);
+        updateMobileButtons(nextOffer);
+    }, null, "<0.1"); 
+    
+    // 3. Animate the new content in
+    cycleTl.to(targetCard, {
+        duration: 0.35,
+        rotationZ: 0,
+        y: 0,
+        opacity: 1,
+        scale: 1,
+    });
+}
+
+// Function to start/restart the card animation
+function startOfferZoneAnimation() {
+    const zone = document.querySelector('.offer-zone');
+    if (!zone) return; 
+    
+    const gridWrapper = document.getElementById('gridWrap');
+    if (!gridWrapper) return;
+
+    // Check if a timeline is already running and kill it before restarting
+    if (offerAnimationTimeline) {
+        offerAnimationTimeline.kill();
+        offerAnimationTimeline = null;
+    }
+
+    // 1. Fetch offers from your API
+    fetch('http://localhost:5000/api/offers')
+        .then(response => response.json())
+        .then(offers => {
+            allOffers = offers; // Store all offers
+            
+            // Render MAX_CARDS_ON_SCREEN (5) or the total number of offers, whichever is smaller
+            const offersToRender = allOffers.slice(0, MAX_CARDS_ON_SCREEN);
+            
+            // 2. Clear content and create card DOM elements (based on initial offers)
+            gridWrapper.innerHTML = ''; 
+            offersToRender.forEach(offer => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                
+                // FIXED BUG: Ensure inner HTML structure exists before calling updateCardContent
+                card.innerHTML = `
+                    <img src="https://placehold.co/180x280/caa97a/ffffff?text=OFFER" alt="Offer placeholder">
+                    <div class="code-box">
+                        <span class="code-text">CODE</span>
+                        <button class="copy-btn">Copy</button> 
+                    </div>
+                `;
+                
+                updateCardContent(card, offer); 
+                gridWrapper.appendChild(card);
+            });
+
+            offerCardElements = Array.from(zone.querySelectorAll('.product-card'));
+            
+            // 3. Conditional GSAP Animation
+            const isMobile = window.innerWidth <= 768;
+            
+            if (!isMobile) {
+                // DESKTOP ANIMATION (Full 5-card spread)
+                const xPositions = [-520, -260, 0, 260, 520]; 
+                const yOffsets = [-28, -10, -22, -10, -28];
+                const baseRotY  = [10, 5, 0, -5, -10];
+                
+                offerAnimationTimeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+                offerAnimationTimeline.to(zone, { duration: 0.6, autoAlpha: 1, scale: 1 });
+                offerAnimationTimeline.set(offerCardElements, { visibility: "visible" }, "-=0.15");
+
+                offerAnimationTimeline.to(offerCardElements, {
+                  duration: 1.1,
+                  x: (i) => xPositions[i] || (i - Math.floor(offerCardElements.length / 2)) * 260, 
+                  y: (i) => yOffsets[i] || 0,
+                  rotationY: (i) => baseRotY[i] || 0,
+                  rotationZ: () => (Math.random() * 6 - 3),
+                  scale: 1,
+                  stagger: { amount: 0.45, from: "center" }
+                }, "-=0.15");
+
+                offerAnimationTimeline.to(offerCardElements, { duration: 0.6, y: "+=6", stagger: 0.05 }, "-=0.15");
+                offerAnimationTimeline.to('.offer-zone h2', { duration: 0.5, autoAlpha: 1, y: 0 }, "-=0.9");
+                offerAnimationTimeline.to('.offer-zone .subtitle', { duration: 0.45, autoAlpha: 1, y: 0 }, "-=0.85");
+                offerAnimationTimeline.to(offerCardElements, { duration: 2.6, y: "+=8", repeat: -1, yoyo: true, stagger: 0.12 }, "-=0.2");
+
+            } else {
+                // MOBILE ANIMATION (Single card focus)
+                const centerCardOffer = allOffers[0];
+                currentOfferIndex = 0; // Reset index for mobile cycle
+                
+                offerAnimationTimeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+                
+                offerAnimationTimeline.to(zone, { duration: 0.6, autoAlpha: 1, scale: 1 });
+                
+                // Animate all 5 cards into a tight, slightly fanned stack for the "card game" look
+                offerAnimationTimeline.to(offerCardElements, {
+                    duration: 1.1,
+                    x: 0, 
+                    y: 0,
+                    rotationY: 0,
+                    rotationZ: (i) => (i - 2) * 2, // Fanning rotation (-4, -2, 0, 2, 4 degrees)
+                    scale: 1,
+                    opacity: 1, 
+                    visibility: "visible",
+                    zIndex: (i) => 5 - Math.abs(i - 2), // Center card (2) has highest z-index
+                    stagger: { amount: 0.2, from: "center" }
+                }, "-=0.2");
+                
+                offerAnimationTimeline.to('.offer-zone h2', { duration: 0.5, autoAlpha: 1, y: 0 }, "-=0.9");
+                offerAnimationTimeline.to('.offer-zone .subtitle', { duration: 0.45, autoAlpha: 1, y: 0 }, "-=0.85");
+
+                // Set up mobile buttons to cycle
+                const changeCardBtn = document.getElementById('changeCardBtn');
+                if (changeCardBtn) changeCardBtn.onclick = cycleMobileOffer;
+                
+                updateMobileButtons(centerCardOffer);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching offers:', error);
+            gridWrapper.innerHTML = '<p>Could not load offers at the moment.</p>';
+        });
+}
+
+// Helper function to check if images are loaded
+function imagesLoaded(parent, cb) {
+  const imgs = parent.querySelectorAll('img');
+  if (!imgs.length) return cb();
+  let loaded = 0;
+  imgs.forEach(img => {
+    if (img.complete) {
+      loaded++;
+      if (loaded === imgs.length) cb();
+    } else {
+      img.addEventListener('load', () => { loaded++; if (loaded === imgs.length) cb(); });
+      img.addEventListener('error', () => { loaded++; if (loaded === imgs.length) cb(); });
+    }
+  });
+}
+
+// ----- Intersection Observer to trigger the animation on scroll -----
+const offerZone = document.querySelector('.offer-zone');
+
+if (offerZone) {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.2
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                startOfferZoneAnimation();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    observer.observe(offerZone);
+}
+
+// ----- Mobile Offer Zone Button Handlers -----
+// These handlers are now attached inside startOfferZoneAnimation for mobile view,
+// but the functions remain here for use in desktop view (copyCode)
+const copyCodeBtn = document.getElementById('copyCodeBtn');
+
+if (copyCodeBtn) {
+    // Default desktop behavior (click handler for desktop card is set inside updateCardContent)
+    if (window.innerWidth > 768) {
+        copyCodeBtn.onclick = () => showMessage("Please click the card to copy the code on desktop.");
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Aurora Perfumes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #caa97a;
+            --secondary: #e6d2b2;
+            --bg: #fdfbf7;
+            --card-bg: #ffffff;
+            --text-dark: #2c2c2c;
+            --text-light: #7b6f6a;
+            --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --processing: #3498db;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .admin-container { display: flex; max-width: 1400px; margin: 20px auto; padding: 20px; gap: 30px; }
+        .sidebar { flex: 1; max-width: 400px; display: flex; flex-direction: column; gap: 30px; align-self: flex-start; }
+        .main-content { flex: 3; display: flex; flex-direction: column; gap: 30px;}
+        .form-container, .list-container { background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: var(--shadow); }
+        h1, h2 { font-weight: 600; margin-bottom: 20px; color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 10px;}
+        h1 { text-align: center; border-bottom: none; }
+        form label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px; color: var(--text-light); }
+        form input, form select, form textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; transition: all 0.3s; }
+        form textarea { resize: vertical; min-height: 80px; }
+        form input:focus, form select:focus, form textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 8px rgba(202, 169, 122, 0.3); }
+        button { padding: 10px 15px; border: none; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease; }
+        button[type="submit"] { width: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; margin-top: 10px; font-size: 16px; padding: 12px;}
+        
+        .product-list, .offer-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .product-card, .offer-card { background: var(--card-bg); border-radius: 16px; box-shadow: var(--shadow); text-align: center; padding: 15px; overflow: hidden; transition: all 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-card:hover, .offer-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+        .product-card img, .offer-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; }
+        .product-card h4, .offer-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+        .product-card .price { font-weight: 700; font-size: 18px; color: var(--primary); margin-bottom: 15px; }
+        .delete-btn { width: 100%; background-color: var(--danger); color: white; }
+
+        .order-list { display: flex; flex-direction: column; gap: 15px; }
+        .order-item { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; align-items: center; gap: 15px; padding: 15px; border: 1px solid #eee; border-radius: 10px; }
+        .order-item div { font-size: 14px; }
+        .order-item strong { color: var(--text-dark); }
+        .order-status-select { padding: 8px; border-radius: 8px; border: 1px solid #ccc; }
+        .update-status-btn { background-color: var(--success); color: white; }
+
+        @media (max-width: 1200px) { .order-item { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 900px) { .admin-container { flex-direction: column; } .sidebar { max-width: 100%; } }
+    </style>
+</head>
+<body>
+    <h1>Aurora Perfumes Admin Panel</h1>
+    <div class="admin-container">
+        
+        <aside class="sidebar">
+            <div class="form-container">
+                <h2>Add New Product</h2>
+                <form id="addProductForm">
+                    <div><label for="name">Product Name</label><input type="text" id="name" required></div>
+                    <div><label for="description">Description</label><textarea id="description" required></textarea></div>
+                    <div><label for="price">Price (₹)</label><input type="number" id="price" required></div>
+                    <div><label for="stockStatus">Stock Status</label><select id="stockStatus" required><option value="In Stock">In Stock</option><option value="Out of Stock">Out of Stock</option></select></div>
+                    <div><label for="deliveryTime">Delivery Time</label><input type="text" id="deliveryTime" placeholder="e.g., 2-4 business days" required></div>
+                    <div><label for="gender">Gender</label><select id="gender" required><option value="">Select...</option><option value="Men">Men</option><option value="Women">Women</option><option value="Unisex">Unisex</option></select></div>
+                    <div><label for="category">Category</label><select id="category" required><option value="">Select...</option><option value="gifts">Gift and Combo</option><option value="Signature">Signature</option><option value="For Him">For Him</option><option value="For Her">For Her</option></select></div>
+                    <div><label for="image">Product Image</label><input type="file" id="image" accept="image/*" required></div>
+                    <button type="submit">Add Product</button>
+                </form>
+            </div>
+            
+            <div class="form-container">
+                <h2>Add New Offer</h2>
+                <form id="addOfferForm">
+                    <div><label for="offerCode">Offer Code</label><input type="text" id="offerCode" name="code" required></div>
+                    <div><label for="offerImage">Offer Poster</label><input type="file" id="offerImage" name="image" accept="image/*" required></div>
+                    <button type="submit">Add Offer</button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="list-container">
+                <h2>Order Management</h2>
+                <div class="order-list" id="orderList">
+                    </div>
+            </div>
+            <div class="list-container">
+                <h2>Current Offers</h2>
+                <div class="offer-list" id="offerList">
+                    </div>
+            </div>
+            <div class="list-container">
+                <h2>Current Products</h2>
+                <div class="product-list" id="productList">
+                    </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const apiBase = "http://localhost:5000/api"; 
+
+        // --- PRODUCT MANAGEMENT ---
+        const addProductForm = document.getElementById('addProductForm');
+        
+        function fetchProducts() {
+            fetch(`${apiBase}/products`).then(res => res.json()).then(products => {
+                const list = document.getElementById('productList');
+                list.innerHTML = '';
+                products.forEach(product => {
+                    list.innerHTML += `
+                        <div class="product-card">
+                            <img src="http://localhost:5000${product.image}" alt="${product.name}">
+                            <div>
+                                <h4>${product.name}</h4>
+                                <p class="price">₹${product.price}</p>
+                            </div>
+                            <button class="delete-btn" onclick="deleteProduct('${product._id}')">Delete</button>
+                        </div>`;
+                });
+            }).catch(err => console.error('Fetch Products Error:', err));
+        }
+
+        addProductForm.addEventListener('submit', function(e){
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('name', document.getElementById('name').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('price', document.getElementById('price').value);
+            formData.append('isInStock', document.getElementById('stockStatus').value === 'In Stock');
+            formData.append('deliveryTime', document.getElementById('deliveryTime').value);
+            formData.append('gender', document.getElementById('gender').value);
+            formData.append('category', document.getElementById('category').value);
+            formData.append('image', document.getElementById('image').files[0]);
+
+            fetch(`${apiBase}/products`, { method: 'POST', body: formData })
+            .then(res => res.json()).then(data => {
+                alert(`Product "${data.name}" added successfully!`);
+                this.reset();
+                fetchProducts();
+            }).catch(err => alert('Failed to add product.'));
+        });
+        
+        function deleteProduct(productId) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                fetch(`${apiBase}/products/${productId}`, { method: 'DELETE' })
+                .then(() => fetchProducts())
+                .catch(err => alert('Delete failed!'));
+            }
+        }
+
+        // --- OFFER MANAGEMENT ---
+        const addOfferForm = document.getElementById('addOfferForm');
+
+        function fetchOffers() {
+            fetch(`${apiBase}/offers`).then(res => res.json()).then(offers => {
+                const list = document.getElementById('offerList');
+                list.innerHTML = '';
+                offers.forEach(offer => {
+                    list.innerHTML += `
+                        <div class="offer-card">
+                           <img src="http://localhost:5000${offer.image}" alt="${offer.code}">
+                           <h4>${offer.code}</h4>
+                           <button class="delete-btn" onclick="deleteOffer('${offer._id}')">Delete</button>
+                        </div>`;
+                });
+            }).catch(err => console.error('Fetch Offers Error:', err));
+        }
+
+        addOfferForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch(`${apiBase}/offers`, { method: 'POST', body: formData })
+            .then(res => res.ok ? res.json() : Promise.reject('Upload failed'))
+            .then(data => {
+                alert(`Offer "${data.code}" added successfully!`);
+                this.reset();
+                fetchOffers(); // Refresh the list
+            })
+            .catch(err => alert('Failed to add offer.'));
+        });
+
+        function deleteOffer(offerId) {
+            if (confirm('Are you sure you want to delete this offer?')) {
+                fetch(`${apiBase}/offers/${offerId}`, { method: 'DELETE' })
+                .then(() => fetchOffers()) // Refresh the list
+                .catch(err => alert('Delete failed!'));
+            }
+        }
+        
+        // --- ORDER MANAGEMENT ---
+        function fetchOrders() {
+            fetch(`${apiBase}/orders`).then(res => res.json()).then(orders => {
+                const list = document.getElementById('orderList');
+                list.innerHTML = '';
+                orders.forEach(order => {
+                    // This assumes your order object has this structure. Adjust if needed.
+                    const orderItemHTML = `
+                        <div class="order-item">
+                            <div><strong>Order ID:</strong> #${order._id.slice(-6)}</div>
+                            <div><strong>Customer:</strong> ${order.user.name || 'N/A'}</div>
+                            <div><strong>Total:</strong> ₹${order.totalAmount}</div>
+                            <div>
+                                <select class="order-status-select" data-order-id="${order._id}">
+                                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                                    <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                    <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                                <button class="update-status-btn" onclick="updateOrderStatus('${order._id}')">Update</button>
+                            </div>
+                        </div>`;
+                    list.innerHTML += orderItemHTML;
+                });
+            }).catch(err => console.error('Fetch Orders Error:', err));
+        }
+
+        function updateOrderStatus(orderId) {
+            const selectElement = document.querySelector(`.order-status-select[data-order-id="${orderId}"]`);
+            const newStatus = selectElement.value;
+            
+            fetch(`${apiBase}/orders/${orderId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(res => res.ok ? res.json() : Promise.reject('Update failed'))
+            .then(() => {
+                alert(`Order #${orderId.slice(-6)} status updated to ${newStatus}!`);
+                fetchOrders(); // Refresh to show changes
+            })
+            .catch(err => alert('Failed to update order status.'));
+        }
+
+        // Initial fetch of all data when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProducts();
+            fetchOffers();
+            fetchOrders();
+        });
+    </script>
+</body>
+</html>

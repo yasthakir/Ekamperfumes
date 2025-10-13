@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Aurora Perfumes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #caa97a;
+            --secondary: #e6d2b2;
+            --bg: #fdfbf7;
+            --card-bg: #ffffff;
+            --text-dark: #2c2c2c;
+            --text-light: #7b6f6a;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --shadow: 0 10px S30px rgba(0, 0, 0, 0.08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            padding: 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .back-btn {
+            font-size: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(202, 169, 122, 0.4);
+            transition: transform 0.3s;
+        }
+        .back-btn:hover { transform: scale(1.1); }
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            flex-grow: 1;
+            text-align: center;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .profile-avatar {
+            font-size: 3rem;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .profile-info h2 { font-size: 1.5rem; font-weight: 600; }
+        .profile-info p { color: var(--text-light); }
+
+        /* Navigation Tabs */
+        .profile-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 8px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+        }
+        .nav-tab {
+            flex: 1;
+            padding: 12px;
+            border-radius: 25px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 5px 15px rgba(202, 169, 122, 0.4);
+        }
+
+        /* Content Panels */
+        .content-panel { display: none; }
+        .content-panel.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Order History */
+        .order-history-list { display: flex; flex-direction: column; gap: 15px; }
+        .order-item {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            align-items: center;
+        }
+        .order-item div { font-size: 0.9rem; }
+        .order-item strong { color: var(--text-dark); display: block; font-size: 0.8rem; color: var(--text-light); }
+        .order-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            text-align: center;
+            color: white;
+        }
+        .status-pending { background-color: #f39c12; }
+        .status-shipped { background-color: var(--primary); }
+        .status-delivered { background-color: var(--success); }
+        .status-cancelled { background-color: var(--danger); }
+
+        /* Track Order */
+        .track-order-form { display: flex; gap: 10px; margin-bottom: 20px; }
+        .track-order-form input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 10px; }
+        .track-order-form button { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; }
+        #trackResult { background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: var(--shadow); }
+
+        /* Logout Button */
+        #logoutButton {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .profile-card { flex-direction: column; text-align: center; }
+            .order-item { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button class="back-btn" onclick="window.history.back();"><i class="fas fa-arrow-left"></i></button>
+            <h1>My Profile</h1>
+        </header>
+
+        <section class="profile-card">
+            <div class="profile-avatar"><i class="fas fa-user"></i></div>
+            <div class="profile-info">
+                <h2 id="userName">Yasmin</h2>
+                <p id="userMobile">+91 98765 43210</p>
+            </div>
+        </section>
+
+        <nav class="profile-nav">
+            <div class="nav-tab active" data-target="orders">My Orders</div>
+            <div class="nav-tab" data-target="track">Track Order</div>
+            <div class="nav-tab" id="logoutButton">Logout</div>
+        </nav>
+
+        <main>
+            <div id="orders" class="content-panel active">
+                <div class="order-history-list" id="orderHistoryList">
+                    <div class="order-item">
+                        <div><strong>Order ID:</strong> #AB12CD</div>
+                        <div><strong>Date:</strong> 10-10-2025</div>
+                        <div><span class="order-status status-delivered">Delivered</span></div>
+                    </div>
+                    <div class="order-item">
+                        <div><strong>Order ID:</strong> #EF34GH</div>
+                        <div><strong>Date:</strong> 11-10-2025</div>
+                        <div><span class="order-status status-shipped">Shipped</span></div>
+                    </div>
+                     <div class="order-item">
+                        <div><strong>Order ID:</strong> #IJ56KL</div>
+                        <div><strong>Date:</strong> 11-10-2025</div>
+                        <div><span class="order-status status-pending">Pending</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="track" class="content-panel">
+                <div class="track-order-form">
+                    <input type="text" id="trackOrderId" placeholder="Enter your Order ID">
+                    <button id="trackOrderBtn">Track</button>
+                </div>
+                <div id="trackResult">Enter an Order ID to see its status.</div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- This script just handles the tab switching for the layout ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.nav-tab');
+            const panels = document.querySelectorAll('.content-panel');
+
+            tabs.forEach(tab => {
+                // We don't want the logout button to be a tab
+                if(tab.id !== 'logoutButton') {
+                    tab.addEventListener('click', () => {
+                        // Remove 'active' from all tabs and panels
+                        tabs.forEach(t => t.classList.remove('active'));
+                        panels.forEach(p => p.classList.remove('active'));
+
+                        // Add 'active' to the clicked tab and its corresponding panel
+                        tab.classList.add('active');
+                        document.getElementById(tab.dataset.target).classList.add('active');
+                    });
+                }
+            });
+
+            // Placeholder for logout
+            document.getElementById('logoutButton').addEventListener('click', () => {
+                alert("Logout functionality will be added here.");
+            });
+        });
+    </script>
+</body>
+</html>

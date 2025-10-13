@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile OTP Login - Aurora Perfumes</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+    <style>
+        :root {
+            --primary: #caa97a;
+            --secondary: #e6d2b2;
+            --bg: #fdfbf7;
+            --card-bg: #ffffff;
+            --text-dark: #2c2c2c;
+            --text-light: #7b6f6a;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --whatsapp-dark: #128C7E;
+            --whatsapp-light: #25D366;
+            --shadow-3d: 0 15px 40px rgba(0, 0, 0, 0.15);
+            --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-dark); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            perspective: 1000px;
+            overflow: hidden;
+        }
+        
+        /* Background Particle Animation */
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .particle { position: absolute; background-color: var(--secondary); border-radius: 50%; opacity: 0.4; animation: float 25s infinite ease-in-out; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+            50% { transform: translateY(-120px) translateX(60px) scale(1.1); }
+        }
+        .particle:nth-child(2) { animation-duration: 30s; animation-delay: -5s; }
+        .particle:nth-child(3) { animation-duration: 20s; animation-delay: -10s; }
+        .particle:nth-child(4) { animation-duration: 35s; animation-delay: -3s; }
+        .particle:nth-child(5) { animation-duration: 18s; animation-delay: -8s; }
+
+        /* 3D Wrapper and Container */
+        .login-wrapper { position: relative; transform-style: preserve-3d; transition: transform 0.8s ease-out; z-index: 1; }
+        .login-container { width: 90%; max-width: 400px; background: var(--card-bg); padding: 40px 30px; border-radius: 20px; box-shadow: var(--shadow-3d); text-align: center; overflow: hidden; }
+        
+        .header-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .back-btn { background: none; border: none; font-size: 24px; color: var(--text-dark); cursor: pointer; transition: color 0.3s, transform 0.3s; padding: 5px 0; }
+        .back-btn:hover { color: var(--primary); transform: scale(1.1); }
+        .logo { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--primary); flex-grow: 1; }
+        
+        /* REFINED: Neater Heading Text */
+        h2 { font-size: 1.7rem; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 30px; color: var(--text-dark); }
+        
+        #login-form { position: relative; }
+        .form-panel { transition: opacity 0.4s, transform 0.4s; }
+
+        /* Floating Label Input Styles */
+        .form-group { position: relative; margin-bottom: 25px; }
+        .form-group .input-group-field { width: 100%; border: 1px solid #ddd; border-radius: 12px; padding: 14px 15px 6px; font-size: 1rem; outline: none; transition: border-color 0.3s; }
+        .form-group label { position: absolute; top: 14px; left: 15px; font-weight: 400; color: var(--text-light); pointer-events: none; transition: all 0.3s ease; }
+        .form-group .input-group-field:focus,
+        .form-group .input-group-field:not(:placeholder-shown) { border-color: var(--primary); }
+        .form-group .input-group-field:focus + label,
+        .form-group .input-group-field:not(:placeholder-shown) + label { top: 4px; font-size: 0.75rem; font-weight: 500; color: var(--primary); }
+        
+        /* Individual OTP Box Styles */
+        #otp-section { display: none; }
+        #otp-inputs { display: flex; justify-content: space-between; gap: 10px; margin: 20px 0 10px; }
+        .otp-box { width: 45px; height: 50px; text-align: center; font-size: 1.5rem; border: 1px solid #ddd; border-radius: 10px; outline: none; transition: all 0.3s ease; }
+        .otp-box:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(202, 169, 122, 0.4); transform: scale(1.05); }
+
+        .change-option { text-align: right; margin-top: 5px; }
+        .change-option button { background: none; border: none; color: var(--danger); font-size: 0.85rem; cursor: pointer; text-decoration: underline; }
+
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 1.1rem; box-shadow: var(--shadow-light); display: flex; align-items: center; justify-content: center; gap: 10px; }
+        #send-otp-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--text-dark); margin-top: 10px; }
+        #verify-otp-btn { background: var(--success); color: white; margin-top: 10px; }
+        
+        /* NEW: WhatsApp Button Style */
+        .btn.whatsapp {
+            background: linear-gradient(135deg, var(--whatsapp-light), var(--whatsapp-dark));
+            color: white;
+            margin-top: 0;
+        }
+        .btn.whatsapp .fab { font-size: 1.3rem; }
+
+        /* NEW: Separator Style */
+        .separator { display: flex; align-items: center; text-align: center; color: var(--text-light); margin: 20px 5px; }
+        .separator::before, .separator::after { content: ''; flex: 1; border-bottom: 1px solid #e0e0e0; }
+        .separator:not(:empty)::before { margin-right: 1em; }
+        .separator:not(:empty)::after { margin-left: 1em; }
+
+        .message { margin-top: 20px; padding: 10px; border-radius: 8px; font-weight: 500; }
+        .error { background-color: #fcebeb; color: var(--danger); border: 1px solid var(--danger); }
+        .success { background-color: #e8f9ed; color: var(--success); border: 1px solid var(--success); }
+        
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }
+        .shake { animation: shake 0.5s ease-in-out; }
+
+        @media (max-width: 500px) {
+            body { min-height: 100vh; padding: 10px; }
+            .login-wrapper { transform-style: flat; transition: none; width: 100%; }
+            .login-container { padding: 30px 20px; border-radius: 15px; max-width: 100%; margin: 20px auto; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
+            h2 { font-size: 1.5rem; }
+            .logo { font-size: 30px; }
+            .btn { font-size: 1rem; padding: 12px; }
+            .login-wrapper.gsap-initialized { transform: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles-container"></div>
+
+    <div class="login-wrapper" id="loginWrapper">
+        <div class="login-container">
+            <div class="header-controls">
+                <button class="back-btn" onclick="window.history.back();"><i class="fas fa-arrow-left"></i></button>
+                <div class="logo">Aurora</div>
+            </div>
+
+            <h2>Login or Sign Up</h2>
+
+            <form id="login-form">
+                <div id="phone-section">
+                    <div class="form-group">
+                        <input type="text" id="phone-input" class="input-group-field" placeholder=" " maxlength="10" required>
+                        <label for="phone-input">Mobile Number (10 Digits)</label>
+                    </div>
+                    <button type="button" id="whatsapp-login-btn" class="btn whatsapp">
+                        <i class="fab fa-whatsapp"></i> Continue with WhatsApp
+                    </button>
+                    <div class="separator">OR</div>
+                    <button type="button" id="send-otp-btn" class="btn">Send OTP via SMS</button>
+                </div>
+
+                <div id="otp-section">
+                    <label>Enter 6-Digit OTP</label>
+                    <div id="otp-inputs"></div>
+                    <div class="change-option">
+                        <button type="button" id="change-input-btn">Change Number</button>
+                    </div>
+                    <div id="otp-timer" style="margin-top: 10px; font-size: 0.9rem; color: var(--text-dark);"></div>
+                    <button type="button" id="verify-otp-btn" class="btn">Verify & Login</button>
+                </div>
+                
+                <div id="status-message" class="message" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+ <script>
+    // --- (GSAP animations and other variables remain the same) ---
+    let timerInterval;
+    let currentMobileNumber = '';
+
+    const loginWrapper = document.getElementById('loginWrapper');
+    const phoneSection = document.getElementById('phone-section');
+    const phoneInput = document.getElementById('phone-input');
+    const sendOtpBtn = document.getElementById('send-otp-btn');
+    const whatsappLoginBtn = document.getElementById('whatsapp-login-btn');
+    const otpSection = document.getElementById('otp-section');
+    const otpInputsContainer = document.getElementById('otp-inputs');
+    const verifyOtpBtn = document.getElementById('verify-otp-btn');
+    const statusMessage = document.getElementById('status-message');
+    const otpTimerEl = document.getElementById('otp-timer');
+    const changeInputBtn = document.getElementById('change-input-btn');
+    const particlesContainer = document.getElementById('particles-container');
+
+    // (Particle creation, initial animation, and mousemove effects remain the same)
+    function createParticles() { /* ... same code ... */ }
+    document.addEventListener('DOMContentLoaded', () => { /* ... same code ... */ });
+    if (window.innerWidth > 768) { /* ... same code ... */ }
+    gsap.utils.toArray('.btn').forEach(btn => { /* ... same code ... */ });
+    
+    function showMessage(text, type) {
+        statusMessage.textContent = text;
+        statusMessage.className = `message ${type}`;
+        statusMessage.style.display = 'block';
+        gsap.fromTo(statusMessage, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3 });
+        if (type === 'error') {
+            statusMessage.classList.add('shake');
+            setTimeout(() => statusMessage.classList.remove('shake'), 500);
+        }
+    }
+    function startTimer(duration) {
+        let timer = duration;
+        otpTimerEl.textContent = `Resend OTP in ${timer}s`;
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timer--;
+            otpTimerEl.textContent = `Resend OTP in ${timer}s`;
+            if (timer <= 0) {
+                clearInterval(timerInterval);
+                otpTimerEl.innerHTML = `<a href="#" onclick="resendOtp(event)" style="color:var(--primary);text-decoration:none;">Resend OTP</a>`;
+            }
+        }, 1000);
+    }
+    function resendOtp(event) {
+        event.preventDefault();
+        proceedToOtpStep('sms', true);
+    }
+    
+    // --- UPDATED: Calls the CORRECT backend URL to send OTP ---
+    async function proceedToOtpStep(method, isResend = false) {
+        if (phoneInput.value.length !== 10 || isNaN(phoneInput.value)) {
+            showMessage('Please enter a valid 10-digit mobile number.', 'error');
+            return;
+        }
+        
+        sendOtpBtn.disabled = true;
+        whatsappLoginBtn.disabled = true;
+        
+        currentMobileNumber = phoneInput.value;
+
+        try {
+            // THIS IS THE CORRECTED URL
+            const response = await fetch('http://localhost:5000/api/auth/send-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mobileNumber: currentMobileNumber })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'An error occurred.');
+            }
+            
+            if (!isResend) {
+                const tl = gsap.timeline();
+                tl.to(phoneSection, { opacity: 0, y: -20, duration: 0.4, onComplete: () => phoneSection.style.display = 'none' });
+                tl.set(otpSection, { display: 'block', opacity: 0, y: 20 });
+                tl.to(otpSection, { opacity: 1, y: 0, duration: 0.4 });
+            }
+
+            showMessage(data.message, 'success');
+            startTimer(60); 
+            document.querySelector('.otp-box').focus();
+
+        } catch (error) {
+            showMessage(error.message, 'error');
+        } finally {
+            sendOtpBtn.disabled = false;
+            whatsappLoginBtn.disabled = false;
+        }
+    }
+
+    sendOtpBtn.addEventListener('click', () => proceedToOtpStep('sms'));
+    whatsappLoginBtn.addEventListener('click', () => proceedToOtpStep('whatsapp'));
+    
+    for (let i = 0; i < 6; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'otp-box';
+        input.maxLength = 1;
+        otpInputsContainer.appendChild(input);
+        input.addEventListener('input', () => { if (input.value && i < 5) input.nextElementSibling.focus(); });
+        input.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && !input.value && i > 0) input.previousElementSibling.focus(); });
+        input.addEventListener('paste', (e) => { e.preventDefault(); const data = e.clipboardData.getData('text').slice(0, 6); data.split('').forEach((char, idx) => { if (otpInputsContainer.children[idx]) otpInputsContainer.children[idx].value = char; }); otpInputsContainer.children[Math.min(data.length, 5)].focus(); });
+        input.addEventListener('input', (e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); });
+    }
+
+    // --- UPDATED: Calls the CORRECT backend URL to verify OTP ---
+    verifyOtpBtn.addEventListener('click', async () => {
+        let enteredOtp = Array.from(otpInputsContainer.children).map(box => box.value).join('');
+        if (enteredOtp.length !== 6) {
+            showMessage('Please enter the full 6-digit OTP.', 'error');
+            return;
+        }
+        verifyOtpBtn.textContent = 'Verifying...';
+        verifyOtpBtn.disabled = true;
+
+        try {
+            // THIS IS THE CORRECTED URL
+            const response = await fetch('http://localhost:5000/api/auth/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mobileNumber: currentMobileNumber, otp: enteredOtp })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Verification failed.');
+            }
+            
+            showMessage(data.message, 'success');
+            localStorage.setItem('userToken', data.token);
+            clearInterval(timerInterval);
+            gsap.to(loginWrapper, { opacity: 0, scale: 1.1, duration: 0.5, onComplete: () => { window.location.href = 'profile.html'; }});
+
+        } catch (error) {
+            showMessage(error.message, 'error');
+            Array.from(otpInputsContainer.children).forEach(box => box.value = '');
+            otpInputsContainer.children[0].focus();
+        } finally {
+            verifyOtpBtn.textContent = 'Verify & Login';
+            verifyOtpBtn.disabled = false;
+        }
+    });
+    
+    changeInputBtn.addEventListener('click', () => {
+        const tl = gsap.timeline();
+        tl.to(otpSection, { opacity: 0, y: -20, duration: 0.4, onComplete: () => { otpSection.style.display = 'none'; Array.from(otpInputsContainer.children).forEach(box => box.value = ''); }});
+        phoneSection.style.display = 'block';
+        tl.set(phoneSection, { opacity: 0, y: 20 });
+        tl.to(phoneSection, { opacity: 1, y: 0, duration: 0.4 });
+        phoneInput.disabled = false;
+        statusMessage.style.display = 'none';
+        clearInterval(timerInterval);
+    });
+</script>
+</body>
+</html>

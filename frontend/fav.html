@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorites - Aurora Perfumes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #caa97a;
+            --secondary: #e6d2b2;
+            --bg: #fdfbf7;
+            --card-bg: #ffffff;
+            --text-dark: #2c2c2c;
+            --text-light: #7b6f6a;
+            --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            --danger: #e74c3c;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text-dark); overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+
+        /* Header Styles */
+        .header { 
+            background: var(--card-bg); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+            padding: 10px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .logo { font-size: 24px; font-weight: 700; color: var(--primary); }
+        
+        /* Navigation & Icons */
+        /* .nav-links is removed */
+        
+        /* Icons Container */
+        .icons { display: flex; align-items: center; gap: 15px; } 
+        .icons a { color: var(--text-dark); font-size: 20px; position: relative; transition: color 0.3s; }
+        .icons a:hover { color: var(--primary); }
+        
+        /* Back Button Style (for consistency) */
+        .back-btn { 
+            background: none; border: none; font-size: 24px; color: var(--text-dark); cursor: pointer; padding: 5px; 
+            transition: color 0.3s, transform 0.3s;
+        }
+        .back-btn:hover { color: var(--primary); transform: translateX(-5px); }
+
+        .count { position: absolute; top: -10px; right: -10px; background-color: var(--primary); color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: 600; }
+        
+        /* Hamburger Menu Setup: REMOVED HAMBURGER AND MOBILE MENU STYLES */
+        /* Since menu is removed, we only keep the logo and actions in the header */
+        .hamburger { display: none !important; } 
+        .mobile-menu { display: none !important; }
+        
+        /* Main Content Styles */
+        .container { max-width: 1200px; margin: 40px auto; padding: 20px; }
+        h2 { text-align: center; color: var(--primary); margin-bottom: 30px; font-weight: 600; font-size: 32px; }
+
+        .fav-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 30px; 
+        }
+        .fav-card { 
+            background: var(--card-bg); 
+            border-radius: 16px; 
+            box-shadow: var(--shadow); 
+            overflow: hidden; 
+            text-align: center; 
+            padding: 15px; 
+            transition: all 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            height: 400px; 
+            cursor: pointer;
+        }
+        .fav-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+        .fav-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; cursor: pointer; }
+        .fav-card h4 { font-size: 18px; font-weight: 600; margin-bottom: 5px; cursor: pointer; }
+        .fav-card .price { font-weight: 700; font-size: 22px; color: var(--primary); margin-bottom: 15px; }
+        .actions { display: flex; justify-content: center; gap: 10px; width: 100%; }
+        .actions button { padding: 10px 15px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.3s; flex-grow: 1; font-size: 14px; }
+        .remove-btn { background-color: var(--danger); color: white; }
+        .add-cart { background-color: var(--primary); color: white; }
+        .add-cart:hover { background-color: #b89163; }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header { 
+                padding: 10px 15px; 
+                /* Simplified grid layout since menus are gone */
+                display: flex;
+                justify-content: space-between;
+            }
+            .header > a.logo { 
+                margin: 0;
+            }
+            .header-left-group { 
+                display: flex; 
+                align-items: center;
+            }
+            
+            /* MODIFICATION: Force 2 columns on mobile screens (max-width 768px) */
+            .fav-grid {
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 15px;
+            }
+            /* Adjust card size for 2 columns */
+            .fav-card { 
+                height: auto; 
+                padding: 10px; 
+            }
+            .fav-card img { height: 150px; }
+            .fav-card h4 { font-size: 16px; }
+            .fav-card .price { font-size: 18px; }
+            .actions button { padding: 8px 10px; font-size: 12px; }
+        }
+        
+        /* Further adjust for very small screens (optional, but recommended) */
+        @media (max-width: 480px) {
+            .fav-card img { height: 120px; }
+            .actions { flex-direction: column; gap: 5px; }
+            .actions button { flex-grow: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left-group">
+            <button class="back-btn" onclick="window.history.back();"><i class="fas fa-arrow-left"></i></button>
+            </div>
+        
+        <a href="index.html" class="logo">Aurora</a>
+        
+        <div class="icons">
+            <a href="profile.html"><i class="fas fa-user"></i></a>
+            <a href="fav.html"><i class="fas fa-heart"></i><span class="count" id="fav-count">0</span></a>
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i><span class="count" id="cart-count">0</span></a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Your Favorite Products</h2>
+        
+        <div class="fav-grid" id="fav-grid">
+            </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFavorites();
+            updateCounts();
+            
+            // Mobile Menu Toggle Logic is entirely removed since menus are gone
+        });
+
+        function updateCounts() {
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            
+            const favCountEl = document.getElementById('fav-count');
+            if(favCountEl) favCountEl.textContent = favorites.length;
+            
+            const totalCartItems = cart.reduce((total, item) => total + item.qty, 0);
+            const cartCountEl = document.getElementById('cart-count');
+            if(cartCountEl) cartCountEl.textContent = totalCartItems;
+        }
+
+        // --- FAVORITES LOGIC ---
+        function renderFavorites() {
+            const favGrid = document.getElementById('fav-grid');
+            favGrid.innerHTML = '';
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+            if (favorites.length === 0) {
+                favGrid.innerHTML = '<p style="text-align: center; font-size: 1.2em; color: var(--text-light); margin-top: 50px;">Your favorites list is empty. Start adding some scents you love!</p>';
+                return;
+            }
+
+            favorites.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "fav-card";
+                card.innerHTML = `
+                    <img src="${item.img}" alt="${item.name}" onerror="this.onerror=null;this.src='https://placehold.co/180x180/ccc/fff?text=No+Image'">
+                    <h4>${item.name}</h4>
+                    <p class="price">₹${item.price}</p>
+                    <div class="actions">
+                        <button class="remove-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i> Remove</button>
+                        <button class="add-cart" data-id="${item.id}"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                    </div>
+                `;
+
+                // Product View Listener
+                card.querySelector("img").onclick = card.querySelector("h4").onclick = ()=>{
+                    localStorage.setItem("productId",item.id); 
+                    window.location.href="product.html";
+                };
+
+                // Remove from Fav Listener
+                card.querySelector('.remove-btn').onclick = (e) => {
+                    e.stopPropagation(); // Prevent card click
+                    removeFavorite(item.id);
+                };
+                
+                // Add to Cart Listener
+                card.querySelector('.add-cart').onclick = (e) => {
+                    e.stopPropagation(); // Prevent card click
+                    addToCart(item); // Pass the already formatted item
+                };
+
+                favGrid.appendChild(card);
+            });
+        }
+
+        function removeFavorite(productId) {
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const updatedFavorites = favorites.filter(p => p.id !== productId);
+            localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+            
+            renderFavorites(); // Re-render the list
+            updateCounts();
+        }
+        
+        // --- CART LOGIC ---
+        function addToCart(favItem) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            
+            const cartItem = {
+                id: favItem.id,
+                name: favItem.name,
+                price: favItem.price,
+                img: favItem.img, 
+                qty: 1
+            };
+            
+            const existingIndex = cart.findIndex(p => p.id === cartItem.id);
+
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += 1;
+            } else {
+                cart.push(cartItem);
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${favItem.name} added to cart!`);
+            updateCounts();
+        }
+    </script>
+</body>
+</html>

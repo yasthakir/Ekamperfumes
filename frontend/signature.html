@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurora Perfumes – Signature Collection</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* --- BASE STYLES (Adjusted for Signature/Heritage Palette: Forest Green & Gold) --- */
+:root{
+  --primary:#8d9a74; /* Muted Forest Green/Olive */
+  --secondary:#d4c49d; /* Platinum Gold/Cream */
+  --bg:#fafafa; /* Clean, light background */
+  --card:#fff;
+  --muted:#7b6f6a;
+  --strong-dark: #2a3423; /* Deep Forest Green for contrast */
+  --glass: rgba(255,255,255,0.7);
+  --shadow:0 10px 25px rgba(0,0,0,0.08);
+  --accent-glow: rgba(141, 154, 116, 0.5); /* Green Glow */
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:#222;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+.container{max-width:1300px;margin:0 auto;padding:20px;}
+
+/* Header (Desktop Default) - Retains glass effect */
+header{
+  position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:15px 30px;
+  backdrop-filter:blur(14px);background:var(--glass);border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,0.1);
+  transition:all 0.3s ease;
+}
+header:hover{background:rgba(255,255,255,0.8);}
+.brand{display:flex;align-items:center;gap:15px;}
+.logo{font-family:'Playfair Display';font-weight:700;font-size:28px;color:white;
+background:linear-gradient(135deg,var(--primary),var(--secondary));padding:12px;border-radius:14px;box-shadow:0 8px 22px rgba(0,0,0,0.1);
+animation:logoGlow 3s ease-in-out infinite alternate;text-align:center;width:50px;height:50px;display:flex;justify-content:center;align-items:center;}
+@keyframes logoGlow{0%{box-shadow:0 0 10px var(--primary);}50%{box-shadow:0 0 18px var(--secondary);}100%{box-shadow:0 0 10px var(--primary);}}
+nav{display:flex;gap:22px;}
+nav a{position:relative;font-weight:500;color:var(--muted);transition:all .3s;}
+nav a::after{content:'';position:absolute;left:0;bottom:-3px;width:0;height:2px;background:var(--primary);transition:width .3s;}
+nav a:hover::after{width:100%;}
+.icon-btn{background:rgba(255,255,255,0.2);border:none;padding:6px 10px;border-radius:12px;cursor:pointer;transition:.3s;font-size:18px;}
+.icon-btn:hover{transform:scale(1.2);background:rgba(255,255,255,0.35);}
+#hamburger{display:none;font-size:26px;background:transparent;border:none;cursor:pointer;}
+.nav-close-btn{display: none;}
+/* === MOBILE NAV MENU FIX (Same as others) === */
+@media(max-width:768px){
+  header { 
+    padding: 15px 20px;
+    position: sticky; 
+    justify-content: space-between;
+  }
+  .brand {
+    position: absolute; 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001; 
+  }
+  .actions { order: 3; }
+  #hamburger { 
+    display: block;
+    order: 1; 
+    z-index: 1001; 
+  }
+  nav{
+    display:none;
+    flex-direction:column;
+    gap:12px;
+    position:fixed; 
+    top: 0; 
+    left: -100%; 
+    right: auto; 
+    width: 70%; 
+    height: 100vh; 
+    background:rgba(255,255,255,0.9); 
+    padding: 80px 20px 20px; 
+    border-radius: 0 16px 16px 0; 
+    backdrop-filter:blur(12px);
+    box-shadow: 10px 0 30px rgba(0,0,0,0.2); 
+    z-index: 1002; 
+    transition: left 0.3s ease-in-out; 
+  }
+  nav.show{
+    display:flex;
+    left: 0; 
+  }
+  .nav-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 32px;
+    color: var(--muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+/* ========== Search Section Below Header (Same as others) ========== */
+.search-section {
+  width: 100%;
+  background: #f5f5f5;
+  padding: 15px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.search-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px 0 0 8px;
+  outline: none;
+}
+
+.search-bar button {
+  padding: 10px 14px;
+  border: none;
+  background: #111;
+  color: white;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.search-bar button:hover {
+  background: #333;
+}
+
+/* --- Products and Filter Grid Styles (Same as others) --- */
+.filter-section {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    padding:15px 20px;
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.05);
+    margin-bottom:30px;
+}
+.filter-group {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+}
+.filter-group label {
+    font-weight:600;
+    font-size:14px;
+    color:var(--muted);
+}
+.filter-group select {
+    padding:8px 12px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    background:#fff;
+    cursor:pointer;
+    font-weight:500;
+    transition:.3s;
+}
+.filter-group select:focus {
+    border-color:var(--primary);
+    box-shadow:0 0 8px var(--accent-glow);
+    outline:none;
+}
+
+.products-grid {
+    /* DEFAULT: 4 columns for Desktop (> 1024px) */
+    display:grid;
+    grid-template-columns:repeat(4, 1fr); 
+    gap:20px;
+}
+
+.product-card-grid {
+    background:#fff;
+    border-radius:16px;
+    padding:15px;
+    text-align:center;
+    box-shadow:0 6px 20px rgba(0,0,0,0.05);
+    transition:.3s;
+}
+.product-card-grid:hover {
+    transform:translateY(-5px);
+    box-shadow:0 12px 25px rgba(0,0,0,0.1);
+}
+.product-card-grid img {
+    width:100%;
+    height:150px;
+    object-fit:cover;
+    border-radius:12px;
+    margin-bottom:12px;
+}
+.product-card-grid h4 {font-size:16px;margin:8px 0;font-weight:600;}
+.product-card-grid .price {font-weight:700;color:#333;margin-bottom:12px;}
+.product-card-grid .add-cart {
+    padding:8px 14px;
+    border-radius:10px;
+    border:none;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    color:var(--strong-dark); 
+    font-weight:600;
+    cursor:pointer;
+}
+.product-card-grid .add-cart:hover {
+    transform:translateY(-2px);
+    box-shadow:0 6px 18px var(--accent-glow);
+}
+.fav-btn.selected {
+    color: #ff4b4b;
+    border-color: #ff4b4b;
+}
+
+/* Responsive Grid (Mandatory 2 Columns for Mobile) */
+@media(max-width:1024px) and (min-width:768px){.products-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:767px){.products-grid{grid-template-columns:repeat(2,1fr);}}
+
+
+/* Page Hero Section - NEW STYLES for 'Signature' */
+.page-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    margin: 30px 0;
+    border-radius: 20px;
+    color: var(--strong-dark); 
+    /* Gradient Background for richness */
+    background: linear-gradient(145deg, var(--bg) 0%, #e0e6df 50%, var(--bg) 100%);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+/* Swirling Aura Effect */
+.hero-aura {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212, 196, 157, 0.4) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-left-content {
+    max-width: 80%;
+    z-index: 2;
+    text-align: center;
+}
+
+.page-hero h1 {
+    font-family:'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1.1;
+    margin-bottom: 15px;
+    color: var(--strong-dark); 
+    position: relative;
+    /* Optional: Subtle border for an engraved look */
+    text-shadow: 1px 1px 0 var(--secondary);
+}
+
+.page-hero p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    color: var(--muted);
+    max-width: 600px;
+}
+
+.hero-cta {
+    padding: 12px 25px;
+    background: var(--strong-dark); /* Dark CTA for contrast */
+    border-radius: 12px;
+    color: var(--secondary); /* Gold text on dark background */
+    font-weight: 700;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1;
+}
+.hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(42, 52, 35, 0.6); /* Darker glow */
+}
+
+.hero-image-center {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.hero-image-center img {
+    width: auto;
+    height: 100%;
+    max-width: 250px;
+    object-fit: contain;
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.3));
+}
+
+/* Fading Scroll Text Overlay */
+.fading-scroll {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+.scroll-text {
+    position: absolute;
+    font-family: 'Playfair Display', serif;
+    font-size: 10vw; 
+    font-weight: 700;
+    color: var(--secondary);
+    opacity: 0.08;
+    white-space: nowrap;
+    user-select: none;
+}
+
+
+/* Responsive adjustments for Hero */
+@media (max-width: 900px) {
+    .page-hero {
+        padding: 40px 20px;
+    }
+    .hero-left-content {
+        max-width: 100%;
+    }
+    .hero-image-center {
+        height: 200px;
+        margin-bottom: 0;
+    }
+    .hero-aura {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+
+/* Footer Styles (Consistent with New Palette) */
+.footer {
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(250,250,250,0.95)); 
+  padding: 60px 20px 30px 20px;
+  color: #333;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+.footer h4 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-family: 'Playfair Display', serif;
+}
+.footer p, .footer ul li {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #555;
+}
+.footer ul {
+  list-style: none;
+  padding: 0;
+}
+.footer ul li {
+  margin-bottom: 10px;
+}
+.footer ul li a {
+  color: #555;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.footer ul li a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+.footer ul li a:hover::after {
+  width: 100%;
+}
+.footer ul li a:hover {
+  color: var(--primary);
+}
+.footer-brand .logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 32px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 12px;
+  border-radius: 14px;
+  display: inline-block;
+  color: white;
+  text-align: center;
+}
+.footer-socials {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+}
+.footer-socials a {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.footer-socials a:hover {
+  transform: translateY(-6px) scale(1.1);
+  box-shadow: 0 8px 20px var(--accent-glow);
+}
+.footer-bottom {
+  margin-top: 40px;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media (max-width: 900px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr); 
+  }
+}
+@media (max-width: 600px) {
+  .footer-container {
+    grid-template-columns: 1fr; 
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+ 
+  <header>
+    <div class="brand">
+      <div class="logo">A</div>
+    </div>
+    <nav>
+      <button class="nav-close-btn" id="navCloseBtn">&times;</button>
+      <a href="index.html">Home</a>
+      <a href="index.html#products">Shop</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button id="hamburger">☰</button>
+
+    <div class="actions">
+      <a href="fav.html">
+        <button class="icon-btn">♡</button>
+      </a>
+      <a href="cart.html">
+        <button class="icon-btn">🛒</button>
+      </a>
+      <a href="profile.html">
+        <button class="icon-btn">👤</button>
+      </a>
+    </div>
+  </header>
+
+  <section class="search-section">
+    <div class="container">
+      <div class="search-bar">
+        <input type="text" placeholder="Search perfumes...">
+        <button type="submit">🔍</button>
+      </div>
+    </div>
+  </section>
+  
+  <section class="page-hero" id="pageHero">
+    <div class="fading-scroll">
+        <div class="scroll-text">AURORA SIGNATURE PERFUMES</div>
+    </div>
+    <div class="hero-left-content">
+        <h1>
+            <span>Timeless</span>
+            <span>Heritage</span>
+        </h1>
+        <p>Our most iconic and beloved fragrances, meticulously crafted to represent the essence of Aurora. These are the scents that define us.</p>
+        <a href="#productsGrid" class="hero-cta" id="heroCta">Discover Classics</a>
+    </div>
+    <div class="hero-image-center">
+        <div class="hero-aura" id="heroAura"></div>
+        <img src="images/signature.png" alt="Signature Perfume Bottle" id="heroBottle">
+    </div>
+  </section>
+
+  <div class="filter-section">
+      <div class="filter-group">
+        <label for="sort">Sort By:</label>
+        <select id="sort">
+          <option>Popularity</option>
+          <option>Newest</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="category">Style:</label>
+        <select id="category">
+          <option>All</option>
+          <option>Original</option>
+          <option>Limited Edition</option>
+          <option>Best Sellers</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="columns">Columns:</label>
+        <select id="columns">
+          <option>4</option>
+          <option>3</option>
+          <option>2</option>
+        </select>
+      </div>
+    </div>
+  
+    <section class="products-grid" id="productsGrid">
+        </section>
+
+</div> 
+<footer class="footer">
+<div class="footer-container">
+  <div class="footer-brand">
+    <div class="logo">A</div>
+    <p>Premium handcrafted fragrances inspired by nature and elegance. Experience luxury in every scent.</p>
+  </div>
+
+  <div class="footer-links">
+    <h4>Quick Links</h4>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#products">Shop</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-categories">
+    <h4>Categories</h4>
+    <ul>
+      <li><a href="forhim.html">For Him</a></li>
+      <li><a href="forher.html">For Her</a></li>
+      <li><a href="gift.html">Gifts</a></li>
+      <li><a href="signature.html">Signature</a></li>
+      <li><a href="#combo">Combo</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-contact">
+    <h4>Contact Us</h4>
+    <p>Email: support@auroraperfumes.com</p>
+    <p>Phone: +91 98765 43210</p>
+    <div class="footer-socials">
+      <a href="#">🐦</a>
+      <a href="#">📘</a>
+      <a href="#">📸</a>
+      <a href="#">🎥</a>
+    </div>
+  </div>
+</div>
+
+<div class="footer-bottom">
+  <p>&copy; 2025 Aurora Perfumes. All rights reserved.</p>
+  <p>Designed with ❤️ by YourBrand</p>
+</div>
+</footer>
+
+<div id="custom-message" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 20px; border-radius:10px; z-index:2000; box-shadow:0 4px 12px rgba(0,0,0,0.3); font-size: 14px; opacity:0; pointer-events: none;"></div>
+
+<script>
+    const GENDER_FILTER = 'Signature'; // Hardcoded filter for this page
+    const imageBaseUrl = 'http://localhost:5000';
+    let allProducts = []; 
+
+    // Custom message box replacement for alert()
+    function showMessage(message) {
+        const msgBox = document.getElementById('custom-message');
+        if (!msgBox) return;
+        msgBox.textContent = message;
+        msgBox.style.display = 'block';
+        
+        gsap.fromTo(msgBox, {y: 20, autoAlpha: 0}, {y: 0, autoAlpha: 1, duration: 0.3});
+        
+        clearTimeout(window.msgTimeout);
+        window.msgTimeout = setTimeout(() => {
+            gsap.to(msgBox, {y: 20, autoAlpha: 0, duration: 0.3, onComplete: () => {
+                 msgBox.style.display = 'none';
+            }});
+        }, 3000);
+    }
+    
+    // --- Common Functions ---
+    function addToCart(product) {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const existingProductIndex = cart.findIndex(item => item.id === product._id);
+
+        const cartItem = {
+            id: product._id,
+            name: product.name,
+            price: product.price,
+            img: `${imageBaseUrl}${product.image}`, 
+            qty: 1
+        };
+
+        if (existingProductIndex > -1) {
+            cart[existingProductIndex].qty = (cart[existingProductIndex].qty || 1) + 1;
+        } else {
+            cart.push(cartItem);
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        showMessage(`${product.name} added to cart!`); 
+    }
+
+    function toggleFavoriteStatus(product, favBtn) {
+        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        const existingProductIndex = favorites.findIndex(item => item.id === product._id);
+        
+        const favItem = {
+            id: product._id,
+            name: product.name,
+            price: product.price,
+            img: `${imageBaseUrl}${product.image}`, 
+        };
+
+        if (existingProductIndex > -1) {
+            favorites.splice(existingProductIndex, 1);
+            favBtn.classList.remove('selected');
+        } else {
+            favorites.push(favItem);
+            favBtn.classList.add('selected');
+        }
+
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        showMessage(`Toggled favorite status for ${product.name}`); 
+    }
+    
+    function openProductView(productId) {
+        if (!productId) {
+            console.error("Invalid Product ID!");
+            return;
+        }
+        localStorage.setItem('productId', productId);
+        window.location.href = 'product.html';
+    }
+    
+    // --- Rendering and Filtering (Mobile 2-Column Logic Applied) ---
+    function renderProducts(products, containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        container.innerHTML = '';
+
+        products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'product-card-grid';
+
+            const isFavorite = favorites.some(item => item.id === product._id);
+
+            card.innerHTML = `
+                <img src="${imageBaseUrl}${product.image}" alt="${product.name}" onerror="this.onerror=null;this.src='https://placehold.co/150x150/8d9a74/ffffff?text=Signature+Scent'">
+                <h4>${product.name}</h4>
+                <p class="price">₹${product.price}</p>
+                <div style="display: flex; gap: 8px; justify-content: center; align-items: center; padding: 0 10px;">
+                    <button class="add-cart" style="flex-grow: 1;">Add to Cart</button>
+                    <button class="fav-btn ${isFavorite ? 'selected' : ''}" style="background: white; border: 1px solid #ddd; border-radius: 10px; padding: 8px 12px; font-size: 16px; cursor: pointer; line-height: 1;">♡</button>
+                </div>
+            `;
+
+            card.addEventListener('click', () => openProductView(product._id));
+            
+            const cartBtn = card.querySelector('.add-cart');
+            const favBtn = card.querySelector('.fav-btn');
+
+            if (cartBtn) {
+                cartBtn.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    addToCart(product);
+                });
+            }
+
+            if (favBtn) {
+                favBtn.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    toggleFavoriteStatus(product, favBtn);
+                });
+            }
+            
+            container.appendChild(card);
+        });
+    }
+
+    function applyFilters() {
+        let filtered = allProducts.filter(p => p.gender === GENDER_FILTER || p.category === 'Signature'); 
+        
+        const categorySelect = document.getElementById('category');
+        const sortSelect = document.getElementById('sort');
+        const columnsSelect = document.getElementById('columns');
+
+        if (categorySelect && categorySelect.value !== 'All') {
+            // Further filter by style/sub-category
+            filtered = filtered.filter(p => p.style === categorySelect.value);
+        }
+        
+        if (sortSelect) {
+            const sort = sortSelect.value;
+            if (sort === 'Price: Low to High') filtered.sort((a, b) => a.price - b.price);
+            if (sort === 'Price: High to Low') filtered.sort((a, b) => b.price - a.price);
+            if (sort === 'Newest') filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+        
+        // Re-render products
+        renderProducts(filtered, 'productsGrid');
+        
+        // Update grid columns style separately, only if screen is desktop/tablet (i.e., > 767px)
+        if (columnsSelect) {
+            const grid = document.getElementById('productsGrid');
+            if (grid && window.innerWidth > 767) {
+                const minWidth = columnsSelect.value === '4' ? '200px' : columnsSelect.value === '3' ? '250px' : 'minmax(300px, 1fr)';
+                grid.style.gridTemplateColumns = `repeat(auto-fill, ${minWidth})`;
+            }
+        }
+    }
+
+    // --- Hero Animation (Aura & Scroll Theme) ---
+    function animateHero() {
+        const hero = document.getElementById('pageHero');
+        if (!hero) return;
+
+        const titleWords = hero.querySelectorAll('h1 span');
+        const paragraph = hero.querySelector('p');
+        const cta = document.getElementById('heroCta');
+        const bottle = document.getElementById('heroBottle');
+        const aura = document.getElementById('heroAura');
+        const scrollText = hero.querySelector('.scroll-text');
+        
+        // Initial state for GSAP timeline
+        gsap.set(titleWords, { y: 30, opacity: 0 });
+        gsap.set([paragraph, cta], { opacity: 0 });
+        gsap.set(bottle, { scale: 0.8, opacity: 0 });
+        gsap.set(aura, { rotation: 0, scale: 0.5 });
+        gsap.set(scrollText, { x: 0 });
+
+        const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+
+        // 1. Aura and Bottle entrance
+        tl.to(aura, { scale: 1, duration: 1.0, ease: "power1.out" })
+          .to(bottle, { scale: 1, opacity: 1, duration: 1.2, ease: "elastic.out(1, 0.5)" }, "-=0.5")
+          
+          // 2. Text entrance
+          .to(titleWords, { y: 0, opacity: 1, duration: 0.5, stagger: 0.1 }, "-=0.8")
+          .to([paragraph, cta], { opacity: 1, duration: 0.7, stagger: 0.2 }, "-=0.5");
+          
+        // 3. Perpetual Bottle & Aura Movement
+        gsap.to(bottle, { y: 10, rotation: 0.5, repeat: -1, yoyo: true, duration: 3, ease: "sine.inout" });
+        gsap.to(aura, { rotation: 360, repeat: -1, duration: 20, ease: "linear" });
+          
+        // 4. Perpetual Fading Scroll Effect
+        gsap.to(scrollText, {
+            x: "-100%", // Scroll the text across
+            duration: 40,
+            ease: "none",
+            repeat: -1
+        });
+    }
+
+
+    // --- Initial Load ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Splitting title words for animation
+        const titleH1 = document.querySelector('.page-hero h1');
+        if(titleH1) {
+            const text = titleH1.textContent;
+            titleH1.innerHTML = text.split(/\s+/).map(word => `<span>${word}</span>`).join(' ');
+        }
+        
+        // Fetch ALL products first (Assuming your API has 'Signature' products)
+        fetch('http://localhost:5000/api/products')
+            .then(response => response.json())
+            .then(products => {
+                allProducts = products;
+                // Initialize filters, which will call renderProducts
+                applyFilters();
+            })
+            .catch(error => console.error('Error fetching all products:', error));
+
+        // Attach event listeners for filters
+        const categorySelect = document.getElementById('category');
+        const sortSelect = document.getElementById('sort');
+        const columnsSelect = document.getElementById('columns');
+
+        if (categorySelect) categorySelect.addEventListener('change', applyFilters);
+        if (sortSelect) sortSelect.addEventListener('change', applyFilters);
+        if (columnsSelect) columnsSelect.addEventListener('change', applyFilters); 
+        
+        // Hamburger Menu Logic
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.querySelector('header nav');
+        const navCloseBtn = document.getElementById('navCloseBtn');
+
+        if (hamburger && nav && navCloseBtn) {
+            hamburger.addEventListener('click', () => nav.classList.add('show'));
+            navCloseBtn.addEventListener('click', () => nav.classList.remove('show'));
+            nav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    nav.classList.remove('show');
+                });
+            });
+        }
+        
+        // Start Hero Animation
+        animateHero();
+    });
+
+</script>
+
+</body>
+</html>
