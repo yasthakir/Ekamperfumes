@@ -101,148 +101,143 @@
         </main>
     </div>
 
-    <script>
-        const apiBase = "https://ekamperfumes-production.up.railway.app/api"; 
+   <script>
+    // MAATHAM 1: Unga live Railway URL'ah inga podunga
+    const serverBaseUrl = "https://ekamperfumes-production.up.railway.app"; 
+    const apiBase = `${serverBaseUrl}/api`; 
 
-        // --- PRODUCT MANAGEMENT ---
-        const addProductForm = document.getElementById('addProductForm');
-        
-        function fetchProducts() {
-            fetch(`${apiBase}/products`).then(res => res.json()).then(products => {
-                const list = document.getElementById('productList');
-                list.innerHTML = '';
-                products.forEach(product => {
-                    list.innerHTML += `
-                        <div class="product-card">
-                            <img src="https://ekamperfumes-production.up.railway.app${product.image}" alt="${product.name}">
-                            <div>
-                                <h4>${product.name}</h4>
-                                <p class="price">₹${product.price}</p>
-                            </div>
-                            <button class="delete-btn" onclick="deleteProduct('${product._id}')">Delete</button>
-                        </div>`;
-                });
-            }).catch(err => console.error('Fetch Products Error:', err));
-        }
+    // --- PRODUCT MANAGEMENT ---
+    const addProductForm = document.getElementById('addProductForm');
+    
+    function fetchProducts() {
+        fetch(`${apiBase}/products`).then(res => res.json()).then(products => {
+            const list = document.getElementById('productList');
+            list.innerHTML = '';
+            products.forEach(product => {
+                list.innerHTML += `
+                    <div class="product-card">
+                        // MAATHAM 2: Image'kum live URL'ah use pannunga
+                        <img src="${serverBaseUrl}${product.image}" alt="${product.name}">
+                        <div>
+                            <h4>${product.name}</h4>
+                            <p class="price">₹${product.price}</p>
+                        </div>
+                        <button class="delete-btn" onclick="deleteProduct('${product._id}')">Delete</button>
+                    </div>`;
+            });
+        }).catch(err => console.error('Fetch Products Error:', err));
+    }
 
-        addProductForm.addEventListener('submit', function(e){
-            e.preventDefault();
-            const formData = new FormData();
-            formData.append('name', document.getElementById('name').value);
-            formData.append('description', document.getElementById('description').value);
-            formData.append('price', document.getElementById('price').value);
-            formData.append('isInStock', document.getElementById('stockStatus').value === 'In Stock');
-            formData.append('deliveryTime', document.getElementById('deliveryTime').value);
-            formData.append('gender', document.getElementById('gender').value);
-            formData.append('category', document.getElementById('category').value);
-            formData.append('image', document.getElementById('image').files[0]);
+    addProductForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        const formData = new FormData(this); // Simpler way to get all form data
 
-            fetch(`${apiBase}/products`, { method: 'POST', body: formData })
-            .then(res => res.json()).then(data => {
-                alert(`Product "${data.name}" added successfully!`);
-                this.reset();
-                fetchProducts();
-            }).catch(err => alert('Failed to add product.'));
-        });
-        
-        function deleteProduct(productId) {
-            if (confirm('Are you sure you want to delete this product?')) {
-                fetch(`${apiBase}/products/${productId}`, { method: 'DELETE' })
-                .then(() => fetchProducts())
-                .catch(err => alert('Delete failed!'));
-            }
-        }
-
-        // --- OFFER MANAGEMENT ---
-        const addOfferForm = document.getElementById('addOfferForm');
-
-        function fetchOffers() {
-            fetch(`${apiBase}/offers`).then(res => res.json()).then(offers => {
-                const list = document.getElementById('offerList');
-                list.innerHTML = '';
-                offers.forEach(offer => {
-                    list.innerHTML += `
-                        <div class="offer-card">
-                           <img src="https://ekamperfumes-production.up.railway.app${offer.image}" alt="${offer.code}">
-                           <h4>${offer.code}</h4>
-                           <button class="delete-btn" onclick="deleteOffer('${offer._id}')">Delete</button>
-                        </div>`;
-                });
-            }).catch(err => console.error('Fetch Offers Error:', err));
-        }
-
-        addOfferForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            fetch(`${apiBase}/offers`, { method: 'POST', body: formData })
-            .then(res => res.ok ? res.json() : Promise.reject('Upload failed'))
-            .then(data => {
-                alert(`Offer "${data.code}" added successfully!`);
-                this.reset();
-                fetchOffers(); // Refresh the list
-            })
-            .catch(err => alert('Failed to add offer.'));
-        });
-
-        function deleteOffer(offerId) {
-            if (confirm('Are you sure you want to delete this offer?')) {
-                fetch(`${apiBase}/offers/${offerId}`, { method: 'DELETE' })
-                .then(() => fetchOffers()) // Refresh the list
-                .catch(err => alert('Delete failed!'));
-            }
-        }
-        
-        // --- ORDER MANAGEMENT ---
-        function fetchOrders() {
-            fetch(`${apiBase}/orders`).then(res => res.json()).then(orders => {
-                const list = document.getElementById('orderList');
-                list.innerHTML = '';
-                orders.forEach(order => {
-                    // This assumes your order object has this structure. Adjust if needed.
-                    const orderItemHTML = `
-                        <div class="order-item">
-                            <div><strong>Order ID:</strong> #${order._id.slice(-6)}</div>
-                            <div><strong>Customer:</strong> ${order.user.name || 'N/A'}</div>
-                            <div><strong>Total:</strong> ₹${order.totalAmount}</div>
-                            <div>
-                                <select class="order-status-select" data-order-id="${order._id}">
-                                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                                    <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
-                                    <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
-                                    <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
-                                    <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-                                </select>
-                                <button class="update-status-btn" onclick="updateOrderStatus('${order._id}')">Update</button>
-                            </div>
-                        </div>`;
-                    list.innerHTML += orderItemHTML;
-                });
-            }).catch(err => console.error('Fetch Orders Error:', err));
-        }
-
-        function updateOrderStatus(orderId) {
-            const selectElement = document.querySelector(`.order-status-select[data-order-id="${orderId}"]`);
-            const newStatus = selectElement.value;
-            
-            fetch(`${apiBase}/orders/${orderId}/status`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus })
-            })
-            .then(res => res.ok ? res.json() : Promise.reject('Update failed'))
-            .then(() => {
-                alert(`Order #${orderId.slice(-6)} status updated to ${newStatus}!`);
-                fetchOrders(); // Refresh to show changes
-            })
-            .catch(err => alert('Failed to update order status.'));
-        }
-
-        // Initial fetch of all data when page loads
-        document.addEventListener('DOMContentLoaded', () => {
+        fetch(`${apiBase}/products`, { method: 'POST', body: formData })
+        .then(res => res.json()).then(data => {
+            alert(`Product "${data.name}" added successfully!`);
+            this.reset();
             fetchProducts();
-            fetchOffers();
-            fetchOrders();
-        });
-    </script>
+        }).catch(err => alert('Failed to add product.'));
+    });
+    
+    function deleteProduct(productId) {
+        if (confirm('Are you sure you want to delete this product?')) {
+            fetch(`${apiBase}/products/${productId}`, { method: 'DELETE' })
+            .then(() => fetchProducts())
+            .catch(err => alert('Delete failed!'));
+        }
+    }
+
+    // --- OFFER MANAGEMENT ---
+    const addOfferForm = document.getElementById('addOfferForm');
+
+    function fetchOffers() {
+        fetch(`${apiBase}/offers`).then(res => res.json()).then(offers => {
+            const list = document.getElementById('offerList');
+            list.innerHTML = '';
+            offers.forEach(offer => {
+                list.innerHTML += `
+                    <div class="offer-card">
+                       // MAATHAM 3: Inga'yum live URL'ah use pannunga
+                       <img src="${serverBaseUrl}${offer.image}" alt="${offer.code}">
+                       <h4>${offer.code}</h4>
+                       <button class="delete-btn" onclick="deleteOffer('${offer._id}')">Delete</button>
+                    </div>`;
+            });
+        }).catch(err => console.error('Fetch Offers Error:', err));
+    }
+
+    addOfferForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch(`${apiBase}/offers`, { method: 'POST', body: formData })
+        .then(res => res.ok ? res.json() : Promise.reject('Upload failed'))
+        .then(data => {
+            alert(`Offer "${data.code}" added successfully!`);
+            this.reset();
+            fetchOffers(); 
+        })
+        .catch(err => alert('Failed to add offer.'));
+    });
+
+    function deleteOffer(offerId) {
+        if (confirm('Are you sure you want to delete this offer?')) {
+            fetch(`${apiBase}/offers/${offerId}`, { method: 'DELETE' })
+            .then(() => fetchOffers())
+            .catch(err => alert('Delete failed!'));
+        }
+    }
+    
+    // --- ORDER MANAGEMENT ---
+    function fetchOrders() {
+        fetch(`${apiBase}/orders`).then(res => res.json()).then(orders => {
+            const list = document.getElementById('orderList');
+            list.innerHTML = '';
+            orders.forEach(order => {
+                const orderItemHTML = `
+                    <div class="order-item">
+                        <div><strong>Order ID:</strong> #${order._id.slice(-6)}</div>
+                        <div><strong>Customer:</strong> ${order.user.name || 'N/A'}</div>
+                        <div><strong>Total:</strong> ₹${order.totalAmount}</div>
+                        <div>
+                            <select class="order-status-select" data-order-id="${order._id}">
+                                <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                                <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                            <button class="update-status-btn" onclick="updateOrderStatus('${order._id}')">Update</button>
+                        </div>
+                    </div>`;
+                list.innerHTML += orderItemHTML;
+            });
+        }).catch(err => console.error('Fetch Orders Error:', err));
+    }
+
+    function updateOrderStatus(orderId) {
+        const selectElement = document.querySelector(`.order-status-select[data-order-id="${orderId}"]`);
+        const newStatus = selectElement.value;
+        
+        fetch(`${apiBase}/orders/${orderId}/status`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        })
+        .then(res => res.ok ? res.json() : Promise.reject('Update failed'))
+        .then(() => {
+            alert(`Order #${orderId.slice(-6)} status updated to ${newStatus}!`);
+            fetchOrders(); 
+        })
+        .catch(err => alert('Failed to update order status.'));
+    }
+
+    // Initial fetch of all data when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchProducts();
+        fetchOffers();
+        fetchOrders();
+    });
+</script>
 </body>
 </html>

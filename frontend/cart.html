@@ -155,7 +155,6 @@
     </div>
 
     <script>
-        const API_URL = 'https://ekamperfumes-production.up.railway.app/api';
         document.addEventListener('DOMContentLoaded', () => {
             renderCart();
             updateCounts();
@@ -192,7 +191,7 @@
 
                     const cartItemHTML = `
                         <div class="cart-item">
-                            <img src="https://ekamperfumes-production.up.railway.app${item.img}" alt="${item.name}" class="item-image" data-id="${item.id}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/ccc/fff?text=No+Image'">
+                            <img src="${item.img}" alt="${item.name}" class="item-image" data-id="${item.id}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/ccc/fff?text=No+Image'">
                             <div class="item-details">
                                 <h4 data-id="${item.id}">${item.name}</h4>
                                 <p>Price: ₹${item.price}</p>
