@@ -1029,6 +1029,8 @@ nav a:hover::after{width:100%;}
 <div id="custom-message" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 20px; border-radius:10px; z-index:2000; box-shadow:0 4px 12px rgba(0,0,0,0.3); font-size: 14px; opacity:0; pointer-events: none;"></div>
 
 <script>
+
+  const API_URL = 'https://ekamperfumes-production.up.railway.app/api';
     // Global state to manage the cycle
     let allOffers = []; 
     let offerCardElements = []; // Store references to the 5 card DOM elements
@@ -1054,7 +1056,7 @@ nav a:hover::after{width:100%;}
     }
     
     // Base URL for image paths
-    const imageBaseUrl = 'http://localhost:5000';
+    const imageBaseUrl = 'https://ekamperfumes-production.up.railway.app/';
 
     // Hamburger and Close button toggle
     const hamburger = document.getElementById('hamburger');
@@ -1188,7 +1190,7 @@ nav a:hover::after{width:100%;}
     }
 
     // Fetch ALL products for the main grid
-    fetch('http://localhost:5000/api/products')
+    fetch(`${API_URL}/products`)
         .then(response => response.json())
         .then(products => {
             window.allProducts = products; // Save for filtering
@@ -1197,7 +1199,7 @@ nav a:hover::after{width:100%;}
         .catch(error => console.error('Error fetching all products:', error));
 
     // Fetch products for the TOP COLLECTION
-     fetch('http://localhost:5000/api/products')
+     fetch('https://ekamperfumes-production.up.railway.app/products')
         .then(response => response.json())
         .then(products => {
             const topProducts = products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
@@ -1341,7 +1343,7 @@ function startOfferZoneAnimation() {
     }
 
     // 1. Fetch offers from your API
-    fetch('http://localhost:5000/api/offers')
+    fetch('https://ekamperfumes-production.up.railway.app/offers')
         .then(response => response.json())
         .then(offers => {
             allOffers = offers; // Store all offers

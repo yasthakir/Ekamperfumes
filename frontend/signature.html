@@ -614,8 +614,9 @@ nav a:hover::after{width:100%;}
 <div id="custom-message" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 20px; border-radius:10px; z-index:2000; box-shadow:0 4px 12px rgba(0,0,0,0.3); font-size: 14px; opacity:0; pointer-events: none;"></div>
 
 <script>
+  const API_URL = 'https://ekamperfumes-production.up.railway.app/api';
     const GENDER_FILTER = 'Signature'; // Hardcoded filter for this page
-    const imageBaseUrl = 'http://localhost:5000';
+    const imageBaseUrl = 'https://ekamperfumes-production.up.railway.app';
     let allProducts = []; 
 
     // Custom message box replacement for alert()
@@ -822,7 +823,7 @@ nav a:hover::after{width:100%;}
         }
         
         // Fetch ALL products first (Assuming your API has 'Signature' products)
-        fetch('http://localhost:5000/api/products')
+        fetch('https://ekamperfumes-production.up.railway.app/api/products')
             .then(response => response.json())
             .then(products => {
                 allProducts = products;

@@ -158,6 +158,7 @@
     </div>
 
  <script>
+    const API_URL = 'https://ekamperfumes-production.up.railway.app/api';
     // --- (GSAP animations and other variables remain the same) ---
     let timerInterval;
     let currentMobileNumber = '';
@@ -223,7 +224,7 @@
 
         try {
             // THIS IS THE CORRECTED URL
-            const response = await fetch('http://localhost:5000/api/auth/send-otp', {
+            const response = await fetch('https://ekamperfumes-production.up.railway.app/api/auth/send-otp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mobileNumber: currentMobileNumber })
@@ -280,7 +281,7 @@
 
         try {
             // THIS IS THE CORRECTED URL
-            const response = await fetch('http://localhost:5000/api/auth/verify-otp', {
+            const response = await fetch('https://ekamperfumes-production.up.railway.app/api/auth/verify-otp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mobileNumber: currentMobileNumber, otp: enteredOtp })
