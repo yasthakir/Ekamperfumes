@@ -102,8 +102,7 @@
     </div>
 
     <script>
-       const apiBaseUrl = "https://ekamperfumes-production.up.railway.app";
-        // ++ MAATRAM MUDINTHATHU ++
+        const apiBaseUrl = "https://ekamperfumes-production.up.railway.app"; 
 
         // --- PRODUCT MANAGEMENT ---
         const addProductForm = document.getElementById('addProductForm');
@@ -115,7 +114,7 @@
                 products.forEach(product => {
                     list.innerHTML += `
                         <div class="product-card">
-                            <img src="${apiBaseUrl}${product.image}" alt="${product.name}">
+                            <img src="${product.image}" alt="${product.name}">
                             <div>
                                 <h4>${product.name}</h4>
                                 <p class="price">₹${product.price}</p>
@@ -164,7 +163,7 @@
                 offers.forEach(offer => {
                     list.innerHTML += `
                         <div class="offer-card">
-                           <img src="${apiBaseUrl}${offer.image}" alt="${offer.code}">
+                           <img src="${offer.image}" alt="${offer.code}">
                            <h4>${offer.code}</h4>
                            <button class="delete-btn" onclick="deleteOffer('${offer._id}')">Delete</button>
                         </div>`;
