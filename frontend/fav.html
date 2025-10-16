@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Favorites - Aurora Perfumes</title>
+    <title>Favorites - Ekam Perfumes</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -31,41 +31,21 @@
             position: sticky; top: 0; z-index: 1000;
         }
         .logo { font-size: 24px; font-weight: 700; color: var(--primary); }
-        
         .icons { display: flex; align-items: center; gap: 15px; } 
         .icons a { color: var(--text-dark); font-size: 20px; position: relative; transition: color 0.3s; }
         .icons a:hover { color: var(--primary); }
-        
-        .back-btn { 
-            background: none; border: none; font-size: 24px; color: var(--text-dark); cursor: pointer; padding: 5px; 
-            transition: color 0.3s, transform 0.3s;
-        }
+        .back-btn { background: none; border: none; font-size: 24px; color: var(--text-dark); cursor: pointer; padding: 5px; transition: color 0.3s, transform 0.3s; }
         .back-btn:hover { color: var(--primary); transform: translateX(-5px); }
-
         .count { position: absolute; top: -10px; right: -10px; background-color: var(--primary); color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: 600; }
-        
-        .hamburger, .mobile-menu { display: none !important; } 
         
         .container { max-width: 1200px; margin: 40px auto; padding: 20px; }
         h2 { text-align: center; color: var(--primary); margin-bottom: 30px; font-weight: 600; font-size: 32px; }
 
-        .fav-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 30px; 
-        }
+        .fav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
         .fav-card { 
-            background: var(--card-bg); 
-            border-radius: 16px; 
-            box-shadow: var(--shadow); 
-            overflow: hidden; 
-            text-align: center; 
-            padding: 15px; 
-            transition: all 0.3s; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            cursor: pointer;
+            background: var(--card-bg); border-radius: 16px; box-shadow: var(--shadow); 
+            overflow: hidden; text-align: center; padding: 15px; transition: all 0.3s; 
+            display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
         }
         .fav-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
         .fav-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; cursor: pointer; }
@@ -75,25 +55,16 @@
         .actions button { padding: 10px 15px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.3s; flex-grow: 1; font-size: 14px; }
         .remove-btn { background-color: var(--danger); color: white; }
         .add-cart { background-color: var(--primary); color: white; }
-        .add-cart:hover { background-color: #b89163; }
 
         @media (max-width: 768px) {
             .header { padding: 10px 15px; }
-            .fav-grid {
-                grid-template-columns: repeat(2, 1fr); 
-                gap: 15px;
-            }
-            .fav-card { height: auto; padding: 10px; }
+            .fav-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .fav-card { padding: 10px; }
             .fav-card img { height: 150px; }
-            .fav-card h4 { font-size: 16px; }
-            .fav-card .price { font-size: 18px; }
-            .actions button { padding: 8px 10px; font-size: 12px; }
         }
-        
         @media (max-width: 480px) {
             .fav-card img { height: 120px; }
             .actions { flex-direction: column; gap: 5px; }
-            .actions button { flex-grow: 0; width: 100%; }
         }
     </style>
 </head>
@@ -122,10 +93,8 @@
         function updateCounts() {
             const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            
             const favCountEl = document.getElementById('fav-count');
             if(favCountEl) favCountEl.textContent = favorites.length;
-            
             const totalCartItems = cart.reduce((total, item) => total + (item.qty || 1), 0);
             const cartCountEl = document.getElementById('cart-count');
             if(cartCountEl) cartCountEl.textContent = totalCartItems;
@@ -142,6 +111,12 @@
             }
 
             favorites.forEach(item => {
+                // This check ensures that only items with full Cloudinary URLs are displayed
+                if (!item.img || !item.img.startsWith('http')) {
+                    console.warn('Skipping favorite item with invalid image URL:', item);
+                    return; // Skip this item
+                }
+
                 const card = document.createElement("div");
                 card.className = "fav-card";
                 card.innerHTML = `
@@ -177,22 +152,13 @@
             let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
             const updatedFavorites = favorites.filter(p => p.id !== productId);
             localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-            
             renderFavorites();
             updateCounts();
         }
         
         function addToCart(favItem) {
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            
-            const cartItem = {
-                id: favItem.id,
-                name: favItem.name,
-                price: favItem.price,
-                img: favItem.img,
-                qty: 1
-            };
-            
+            const cartItem = { id: favItem.id, name: favItem.name, price: favItem.price, img: favItem.img, qty: 1 };
             const existingIndex = cart.findIndex(p => p.id === cartItem.id);
 
             if (existingIndex > -1) {
@@ -200,7 +166,6 @@
             } else {
                 cart.push(cartItem);
             }
-            
             localStorage.setItem('cart', JSON.stringify(cart));
             alert(`${favItem.name} added to cart!`);
             updateCounts();
