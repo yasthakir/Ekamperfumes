@@ -1,31 +1,43 @@
+// server.js
+
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const path = require('path');
-const fs = require('fs');
+const path = require('path'); // Path module is still useful for other things, so we can keep it.
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// `uploads` மற்றும் அதன் துணைக் கோப்புறைகள் இருக்கிறதா என்று பார்த்து, இல்லையென்றால் உருவாக்கும்
-const uploadsDir = path.join(__dirname, 'uploads');
-const reviewsDir = path.join(uploadsDir, 'reviews');
-const offersDir = path.join(uploadsDir, 'offers');
-const productsDir = path.join(uploadsDir, 'products');
+// --- Middleware ---
 
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
-if (!fs.existsSync(reviewsDir)) fs.mkdirSync(reviewsDir);
-if (!fs.existsSync(offersDir)) fs.mkdirSync(offersDir);
-if (!fs.existsSync(productsDir)) fs.mkdirSync(productsDir);
+// ++ IMPORTANT CHANGE: CORS Configuration for Deployment ++
+// This allows your Vercel frontend to make requests to your Railway backend.
+const whitelist = [
+    'http://localhost:5500', // For local testing
+    'http://127.0.0.1:5500', // For local testing
+    'https://ekamperfumes.vercel.app' // **IMPORTANT: Replace this with your actual Vercel URL**
+];
 
-// Middleware
-app.use(cors());
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin || whitelist.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+};
+app.use(cors(corsOptions));
+// ++ END OF CHANGE ++
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// `uploads` கோப்புறையில் உள்ள படங்களை வெளிப்புறமாகக் காட்ட
-app.use('/uploads', express.static(uploadsDir));
+// --- REMOVED: Local 'uploads' Directory Logic ---
+// The code that created local 'uploads' folders and served them statically has been removed
+// because all images will now be handled by Cloudinary.
 
 // --- Database Connection ---
 mongoose.connect(process.env.MONGO_URI)
@@ -37,15 +49,16 @@ const offerRoutes = require('./routes/offers');
 const productRoutes = require('./routes/productroutes');
 const authRoutes = require('./routes/authRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-const reviewRoutes = require('./routes/reviews'); // Review routes இறக்குமதி செய்யப்பட்டது
+const reviewRoutes = require('./routes/reviews');
 
 app.use('/api/offers', offerRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/reviews', reviewRoutes); // Review routes பயன்படுத்தப்படுகிறது
+app.use('/api/reviews', reviewRoutes);
 
 // --- Start the server ---
-app.listen(PORT, () => {
-    console.log(`Server is running beautifully on http://localhost:${PORT}`);
+// Adding '0.0.0.0' makes the server accessible from outside its container, which is required by Railway.
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running beautifully on port: ${PORT}`);
 });

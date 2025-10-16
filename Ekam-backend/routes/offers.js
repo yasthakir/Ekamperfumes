@@ -1,18 +1,11 @@
+// routes/offers.js
+
 const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const Offer = require('../models/Offer');
-
 const router = express.Router();
+const Offer = require('../models/Offer');
+const { uploadOffer } = require('../config/cloudinary'); // ++ புதிய import ++
 
-// Multer configuration for offer image uploads
-const storage = multer.diskStorage({
-    destination: './uploads/offers/',
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    },
-});
-const upload = multer({ storage: storage });
+// --- MULTER CONFIGURATION NEEKKAPATTATHU ---
 
 // GET /api/offers - Fetch all offers
 router.get('/', async (req, res) => {
@@ -25,7 +18,8 @@ router.get('/', async (req, res) => {
 });
 
 // POST /api/offers - Add a new offer
-router.post('/', upload.single('image'), async (req, res) => {
+// upload.single('image') என்பதற்குப் பதிலாக uploadOffer.single('image') என மாற்றவும்
+router.post('/', uploadOffer.single('image'), async (req, res) => {
     try {
         const { code } = req.body;
         if (!req.file) {
@@ -33,7 +27,8 @@ router.post('/', upload.single('image'), async (req, res) => {
         }
         const newOffer = new Offer({
             code,
-            image: `/uploads/offers/${req.file.filename}`,
+            // ++ MUKIYAMANA MAATRAM: Cloudinary URL-ஐப் பெறுதல் ++
+            image: req.file.path,
         });
         const savedOffer = await newOffer.save();
         res.status(201).json(savedOffer);
