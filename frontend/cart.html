@@ -159,7 +159,7 @@
                 cartItemsContainer.innerHTML += '<p style="text-align: center; font-size: 1.2em; color: var(--text-light);">Your cart is empty.</p>';
             } else {
                 cart.forEach(item => {
-                    const itemQty = item.qty || 1; // Default quantity to 1 if not present
+                    const itemQty = item.qty || 1;
                     subtotal += item.price * itemQty;
                     const itemTotal = item.price * itemQty;
 
@@ -204,7 +204,7 @@
             const itemIndex = cart.findIndex(p => p.id === productId);
 
             if (itemIndex > -1) {
-                cart[itemIndex].qty = (cart[itemIndex].qty || 1) + change; // Ensure qty exists before changing
+                cart[itemIndex].qty = (cart[itemIndex].qty || 1) + change;
                 if (cart[itemIndex].qty <= 0) {
                     cart.splice(itemIndex, 1);
                 }

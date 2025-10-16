@@ -100,7 +100,7 @@
 <body>
     <header class="header">
         <button class="back-btn" onclick="window.history.back();"><i class="fas fa-arrow-left"></i></button>
-        <a href="index.html" class="logo">Aurora</a>
+        <a href="index.html" class="logo">Ekam</a>
         <div class="icons">
             <a href="profile.html"><i class="fas fa-user"></i></a>
             <a href="fav.html"><i class="fas fa-heart"></i><span class="count" id="fav-count">0</span></a>
@@ -185,12 +185,11 @@
         function addToCart(favItem) {
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
             
-            // Use the same structure as your other cart functions
             const cartItem = {
                 id: favItem.id,
                 name: favItem.name,
                 price: favItem.price,
-                img: favItem.img, // Already the full Cloudinary URL
+                img: favItem.img,
                 qty: 1
             };
             
