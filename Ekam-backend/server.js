@@ -24,8 +24,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// `uploads` கோப்புறையில் உள்ள படங்களை வெளிப்புறமாகக் காட்ட
-app.use('/uploads', express.static(uploadsDir));
+// --- `uploads` கோப்புறையில் உள்ள படங்களை வெளிப்புறமாகக் காட்ட ---
+// Intha line thaan maathiri മാറ്റം senjirukom, path-a innum theliva solrathuku.
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- Database Connection ---
 mongoose.connect(process.env.MONGO_URI)
