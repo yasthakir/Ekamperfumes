@@ -1,47 +1,52 @@
-const User = require('../models/User');
+// controllers/authController.js
 
-// Send OTP to user's mobile number
+const User = require('../models/User');
+const jwt = require('jsonwebtoken'); // Import jsonwebtoken
+
+// Send OTP
 exports.sendOTP = async (req, res) => {
     const { mobile } = req.body;
-    // For now, we show the OTP in the console instead of sending an SMS
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    const otp = Math.floor(1000 + Math.random() * 9000).toString(); // 4-digit OTP
 
     try {
-        // Update user if they exist, or create a new one
         await User.findOneAndUpdate(
             { mobile },
-            { otp, otpExpires: Date.now() + 300000 }, // OTP is valid for 5 minutes
+            { otp, otpExpires: Date.now() + 300000 }, // 5 minutes validity
             { upsert: true, new: true, setDefaultsOnInsert: true }
         );
-
-        console.log(`OTP for ${mobile} is: ${otp}`); // Shows OTP in the terminal for testing
-        res.status(200).json({ success: true, message: "OTP sent successfully (check console)." });
+        console.log(`OTP for ${mobile} is: ${otp}`);
+        res.status(200).json({ success: true, message: "OTP sent (check console)." });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server error while sending OTP." });
+        res.status(500).json({ success: false, message: "Server error sending OTP." });
     }
 };
 
-// Verify the OTP and log in the user
+// Verify OTP and generate JWT token
 exports.verifyOTP = async (req, res) => {
     const { mobile, otp } = req.body;
     try {
         const user = await User.findOne({
             mobile,
             otp,
-            otpExpires: { $gt: Date.now() } // Check if the OTP has not expired
+            otpExpires: { $gt: Date.now() }
         });
 
         if (!user) {
             return res.status(400).json({ success: false, message: "Invalid or expired OTP." });
         }
 
-        // If login is successful, clear the OTP fields
         user.otp = undefined;
         user.otpExpires = undefined;
         await user.save();
 
-        // In a real app, you would generate a JWT token here
-        res.status(200).json({ success: true, message: "Login Successful!", user });
+        // ++ IMPORTANT: Generate a JWT Token ++
+        const token = jwt.sign(
+            { id: user._id, mobile: user.mobile },
+            process.env.JWT_SECRET, // Make sure to add JWT_SECRET to your .env and Railway variables
+            { expiresIn: '30d' }
+        );
+
+        res.status(200).json({ success: true, message: "Login Successful!", token, user });
     } catch (error) {
         res.status(500).json({ success: false, message: "Server error during verification." });
     }

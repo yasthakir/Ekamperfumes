@@ -7,234 +7,138 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root {
-            --primary: #caa97a;
-            --secondary: #e6d2b2;
-            --bg: #fdfbf7;
-            --card-bg: #ffffff;
-            --text-dark: #2c2c2c;
-            --text-light: #7b6f6a;
-            --danger: #e74c3c;
-            --success: #2ecc71;
-            --shadow: 0 10px S30px rgba(0, 0, 0, 0.08);
-        }
+        :root { --primary: #caa97a; --secondary: #e6d2b2; --bg: #fdfbf7; --card-bg: #ffffff; --text-dark: #2c2c2c; --text-light: #7b6f6a; --danger: #e74c3c; --success: #2ecc71; --shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-dark);
-            padding: 20px;
-        }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text-dark); padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; }
-
-        /* Header */
-        header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        .back-btn {
-            font-size: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(202, 169, 122, 0.4);
-            transition: transform 0.3s;
-        }
+        header { display: flex; align-items: center; margin-bottom: 30px; }
+        .back-btn { font-size: 20px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 5px 15px rgba(202, 169, 122, 0.4); transition: transform 0.3s; }
         .back-btn:hover { transform: scale(1.1); }
-        header h1 {
-            font-family: 'Playfair Display', serif;
-            flex-grow: 1;
-            text-align: center;
-            font-size: 2rem;
-            color: var(--primary);
-        }
-
-        /* Profile Card */
-        .profile-card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-        .profile-avatar {
-            font-size: 3rem;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        header h1 { font-family: 'Playfair Display', serif; flex-grow: 1; text-align: center; font-size: 2rem; color: var(--primary); }
+        .profile-card { background: var(--card-bg); padding: 30px; border-radius: 20px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 25px; margin-bottom: 30px; }
+        .profile-avatar { font-size: 3rem; width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; display: flex; align-items: center; justify-content: center; }
         .profile-info h2 { font-size: 1.5rem; font-weight: 600; }
         .profile-info p { color: var(--text-light); }
-
-        /* Navigation Tabs */
-        .profile-nav {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            background: var(--card-bg);
-            padding: 8px;
-            border-radius: 30px;
-            box-shadow: var(--shadow);
-        }
-        .nav-tab {
-            flex: 1;
-            padding: 12px;
-            border-radius: 25px;
-            text-align: center;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .nav-tab.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 5px 15px rgba(202, 169, 122, 0.4);
-        }
-
-        /* Content Panels */
+        .profile-nav { display: flex; gap: 10px; margin-bottom: 30px; background: var(--card-bg); padding: 8px; border-radius: 30px; box-shadow: var(--shadow); }
+        .nav-tab { flex: 1; padding: 12px; border-radius: 25px; text-align: center; font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
+        .nav-tab.active { background: var(--primary); color: white; box-shadow: 0 5px 15px rgba(202, 169, 122, 0.4); }
         .content-panel { display: none; }
-        .content-panel.active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Order History */
+        .content-panel.active { display: block; }
         .order-history-list { display: flex; flex-direction: column; gap: 15px; }
-        .order-item {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-            align-items: center;
-        }
+        .order-item { background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: var(--shadow); display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; align-items: center; }
         .order-item div { font-size: 0.9rem; }
         .order-item strong { color: var(--text-dark); display: block; font-size: 0.8rem; color: var(--text-light); }
-        .order-status {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: 500;
-            text-align: center;
-            color: white;
-        }
+        .order-status { padding: 5px 12px; border-radius: 20px; font-weight: 500; text-align: center; color: white; text-transform: capitalize; }
         .status-pending { background-color: #f39c12; }
+        .status-processing { background-color: #3498db; }
         .status-shipped { background-color: var(--primary); }
         .status-delivered { background-color: var(--success); }
         .status-cancelled { background-color: var(--danger); }
-
-        /* Track Order */
-        .track-order-form { display: flex; gap: 10px; margin-bottom: 20px; }
-        .track-order-form input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 10px; }
-        .track-order-form button { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; }
-        #trackResult { background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: var(--shadow); }
-
-        /* Logout Button */
-        #logoutButton {
-            background: var(--danger);
-            color: white;
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
-        }
-
-        @media (max-width: 600px) {
-            .profile-card { flex-direction: column; text-align: center; }
-            .order-item { grid-template-columns: 1fr 1fr; }
-        }
+        #logoutButton { background: var(--danger); color: white; box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4); }
+        @media (max-width: 600px) { .profile-card { flex-direction: column; text-align: center; } .order-item { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <button class="back-btn" onclick="window.history.back();"><i class="fas fa-arrow-left"></i></button>
+            <button class="back-btn" onclick="window.location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
             <h1>My Profile</h1>
         </header>
-
         <section class="profile-card">
             <div class="profile-avatar"><i class="fas fa-user"></i></div>
             <div class="profile-info">
-                <h2 id="userName">Yasmin</h2>
-                <p id="userMobile">+91 98765 43210</p>
+                <h2 id="userName">Guest</h2>
+                <p id="userMobile">Please log in</p>
             </div>
         </section>
-
         <nav class="profile-nav">
             <div class="nav-tab active" data-target="orders">My Orders</div>
-            <div class="nav-tab" data-target="track">Track Order</div>
             <div class="nav-tab" id="logoutButton">Logout</div>
         </nav>
-
         <main>
             <div id="orders" class="content-panel active">
-                <div class="order-history-list" id="orderHistoryList">
-                    <div class="order-item">
-                        <div><strong>Order ID:</strong> #AB12CD</div>
-                        <div><strong>Date:</strong> 10-10-2025</div>
-                        <div><span class="order-status status-delivered">Delivered</span></div>
-                    </div>
-                    <div class="order-item">
-                        <div><strong>Order ID:</strong> #EF34GH</div>
-                        <div><strong>Date:</strong> 11-10-2025</div>
-                        <div><span class="order-status status-shipped">Shipped</span></div>
-                    </div>
-                     <div class="order-item">
-                        <div><strong>Order ID:</strong> #IJ56KL</div>
-                        <div><strong>Date:</strong> 11-10-2025</div>
-                        <div><span class="order-status status-pending">Pending</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="track" class="content-panel">
-                <div class="track-order-form">
-                    <input type="text" id="trackOrderId" placeholder="Enter your Order ID">
-                    <button id="trackOrderBtn">Track</button>
-                </div>
-                <div id="trackResult">Enter an Order ID to see its status.</div>
+                <div class="order-history-list" id="orderHistoryList"></div>
             </div>
         </main>
     </div>
 
     <script>
-        // --- This script just handles the tab switching for the layout ---
+        // ++ UPDATED: API URL for Railway ++
+        const apiBase = "https://ekamperfumes-production.up.railway.app/api";
+
         document.addEventListener('DOMContentLoaded', () => {
-            const tabs = document.querySelectorAll('.nav-tab');
-            const panels = document.querySelectorAll('.content-panel');
+            const user = JSON.parse(localStorage.getItem('auroraUser'));
+            const token = localStorage.getItem('auroraToken');
 
-            tabs.forEach(tab => {
-                // We don't want the logout button to be a tab
-                if(tab.id !== 'logoutButton') {
-                    tab.addEventListener('click', () => {
-                        // Remove 'active' from all tabs and panels
-                        tabs.forEach(t => t.classList.remove('active'));
-                        panels.forEach(p => p.classList.remove('active'));
+            if (!user || !token) {
+                // If not logged in, redirect to login page
+                window.location.href = 'login.html';
+                return;
+            }
 
-                        // Add 'active' to the clicked tab and its corresponding panel
-                        tab.classList.add('active');
-                        document.getElementById(tab.dataset.target).classList.add('active');
-                    });
+            // Populate profile details
+            document.getElementById('userName').textContent = user.name || 'Valued Customer';
+            document.getElementById('userMobile').textContent = user.mobile;
+            
+            fetchUserOrders(user.mobile, token);
+
+            // Tab switching
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                if (tab.id !== 'logoutButton') {
+                    tab.addEventListener('click', () => { /* ... tab logic ... */ });
                 }
             });
 
-            // Placeholder for logout
+            // Logout functionality
             document.getElementById('logoutButton').addEventListener('click', () => {
-                alert("Logout functionality will be added here.");
+                localStorage.removeItem('auroraUser');
+                localStorage.removeItem('auroraToken');
+                alert("You have been logged out.");
+                window.location.href = 'index.html';
             });
         });
+
+        async function fetchUserOrders(mobile, token) {
+            const orderListContainer = document.getElementById('orderHistoryList');
+            orderListContainer.innerHTML = '<p>Loading your orders...</p>';
+            try {
+                // Note: The backend route needs to be created for this to work
+                const response = await fetch(`${apiBase}/orders/user/${mobile}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Could not fetch orders.');
+                }
+
+                const orders = await response.json();
+                
+                if (orders.length === 0) {
+                    orderListContainer.innerHTML = '<p>You have not placed any orders yet.</p>';
+                    return;
+                }
+
+                orderListContainer.innerHTML = ''; // Clear loading message
+                orders.forEach(order => {
+                    const orderDate = new Date(order.createdAt).toLocaleDateString('en-IN');
+                    const statusClass = `status-${order.status.toLowerCase()}`;
+                    
+                    const orderItem = document.createElement('div');
+                    orderItem.className = 'order-item';
+                    orderItem.innerHTML = `
+                        <div><strong>Order ID:</strong> #${order._id.slice(-6).toUpperCase()}</div>
+                        <div><strong>Date:</strong> ${orderDate}</div>
+                        <div><strong>Total:</strong> ₹${order.totalAmount.toFixed(2)}</div>
+                        <div><span class="order-status ${statusClass}">${order.status}</span></div>
+                    `;
+                    orderListContainer.appendChild(orderItem);
+                });
+
+            } catch (error) {
+                console.error('Fetch orders error:', error);
+                orderListContainer.innerHTML = '<p style="color:var(--danger);">Could not load your order history.</p>';
+            }
+        }
     </script>
 </body>
 </html>
