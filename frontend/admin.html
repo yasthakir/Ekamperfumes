@@ -113,9 +113,13 @@
                 const list = document.getElementById('productList');
                 list.innerHTML = '';
                 products.forEach(product => {
+                    // Corrects path if it was saved with a full localhost URL during development
+                    const imagePath = product.image ? String(product.image).replace('http://localhost:5000', '') : '';
+                    const imageUrl = `${serverBase}${imagePath}`;
+
                     list.innerHTML += `
                         <div class="product-card">
-                            <img src="${serverBase}${product.image}" alt="${product.name}">
+                            <img src="${imageUrl}" alt="${product.name}" onerror="this.onerror=null;this.src='https://placehold.co/220x180/fdfbf7/caa97a?text=Not+Found';">
                             <div>
                                 <h4>${product.name}</h4>
                                 <p class="price">₹${product.price}</p>
@@ -247,3 +251,4 @@
     </script>
 </body>
 </html>
+
