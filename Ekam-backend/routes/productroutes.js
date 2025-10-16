@@ -1,123 +1,81 @@
 const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const Product = require('../models/product');
-
 const router = express.Router();
+const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
+const Product = require('../models/Product'); // Ensure this path is correct
 
-// Multer configuration for product image uploads
-const storage = multer.diskStorage({
-    destination: './uploads/products/',
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    },
+// --- Configure Cloudinary ---
+// Itha unga .env file-la vechurukurathu nallathu
+cloudinary.config({ 
+  cloud_name: 'demc3euq6', 
+  api_key: '119291618846383', 
+  api_secret: '6D0x-2JvTmNtgxZO35M0OtGnG6k' 
 });
+
+// --- Configure Multer to use Cloudinary Storage ---
+// Intha code thaan varra file-a neraya Cloudinary-kku anuppidum
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'ekam-perfumes-products', // Cloudinary-la intha per-la oru folder create aagum
+    format: async (req, file) => 'jpg', // JPG, PNG, etc. format-a save pannum
+    public_id: (req, file) => Date.now() + '-' + file.originalname, // Unique name for each file
+  },
+});
+
 const upload = multer({ storage: storage });
 
-// POST /api/products - Add a new product
+// --- API Routes ---
+
+// GET: Get all products
+router.get('/', async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// POST: Create a new product
+// Inga `upload.single('image')` middleware ippo Cloudinary-kku upload pannum
 router.post('/', upload.single('image'), async (req, res) => {
-    try {
-        const { name, description, price, gender, category, isInStock, deliveryTime } = req.body;
-        
-        if (!req.file) {
-            return res.status(400).json({ message: 'Product image is required.' });
-        }
+  // Cloudinary-la upload aanathukku apram, req.file.path la permanent URL irukkum
+  if (!req.file) {
+    return res.status(400).send('Image upload failed.');
+  }
 
-        const newProduct = new Product({
-            name,
-            description,
-            price,
-            gender,
-            category,
-            isInStock: isInStock === 'true',
-            deliveryTime,
-            image: `/uploads/products/${req.file.filename}`,
-        });
+  const newProduct = new Product({
+    name: req.body.name,
+    description: req.body.description,
+    price: req.body.price,
+    isInStock: req.body.isInStock,
+    deliveryTime: req.body.deliveryTime,
+    gender: req.body.gender,
+    category: req.body.category,
+    // MODIFIED: Ippo neraya Cloudinary URL-a save panrom
+    image: req.file.path 
+  });
 
-        const savedProduct = await newProduct.save();
-        res.status(201).json(savedProduct);
-    } catch (error) {
-        console.error("--- PRODUCT CREATE ERROR ---", error);
-        res.status(500).json({ message: 'Error creating product', error });
-    }
+  try {
+    const savedProduct = await newProduct.save();
+    res.status(201).json(savedProduct);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
-// GET /api/products - Fetch all products
-router.get('/', async (req, res) => {
-    try {
-        const products = await Product.find().sort({ createdAt: -1 });
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching products', error });
-    }
-});
-// ... existing routes ...
-
-// GET /api/products - Fetch all products
-router.get('/', async (req, res) => {
-    try {
-        const products = await Product.find().sort({ createdAt: -1 });
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching products', error });
-    }
-});
-
-// New Route: GET /api/products/category/:categoryName - Fetch products by category
-router.get('/category/:categoryName', async (req, res) => {
-    try {
-        const categoryName = req.params.categoryName;
-        
-        // This finds products where the 'category' field exactly matches the name from the URL (e.g., "For Him")
-        const products = await Product.find({ category: categoryName }).sort({ createdAt: -1 });
-        
-        if (products.length === 0) {
-            // Check if products were tagged with 'Men' in the gender field instead of 'For Him' in category field
-            // The admin form might be setting the 'gender' field to 'Men' for the 'For Him' selection.
-            const genderFilter = (categoryName === 'For Him' || categoryName === 'For Her') ? 
-                                 (categoryName === 'For Him' ? 'Men' : 'Women') : null;
-            
-            if (genderFilter) {
-                const genderProducts = await Product.find({ gender: genderFilter }).sort({ createdAt: -1 });
-                return res.status(200).json(genderProducts);
-            }
-        }
-
-        res.status(200).json(products);
-    } catch (error) {
-        console.error("--- FETCH PRODUCTS BY CATEGORY ERROR ---", error);
-        res.status(500).json({ message: 'Error fetching products by category', error });
-    }
-});
-
-
-// --- THIS IS THE NEW ROUTE YOU ARE ADDING ---
-// GET /api/products/:id - Fetch a single product by its ID
-router.get('/:id', async (req, res) => {
-    try {
-        const product = await Product.findById(req.params.id);
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
-        res.status(200).json(product);
-    } catch (error) {
-        console.error("--- FETCH SINGLE PRODUCT ERROR ---", error);
-        res.status(500).json({ message: 'Error fetching product details', error });
-    }
-});
-// --- END OF NEW ROUTE ---
-
-// DELETE /api/products/:id - Delete a product
+// DELETE: Delete a product
 router.delete('/:id', async (req, res) => {
-    try {
-        const deletedProduct = await Product.findByIdAndDelete(req.params.id);
-        if (!deletedProduct) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
-        res.status(200).json({ message: 'Product deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Error deleting product', error });
-    }
+  try {
+    const product = await Product.findByIdAndDelete(req.params.id);
+    if (!product) return res.status(404).send('Product not found.');
+    // Note: You might also want to delete the image from Cloudinary here to save space
+    res.status(200).send('Product successfully deleted.');
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 module.exports = router;
