@@ -830,7 +830,6 @@ nav a:hover::after{width:100%;}
       <div class="logo">A</div>
     </div>
     <nav>
-      <!-- Added close button to the mobile menu -->
       <button class="nav-close-btn" id="navCloseBtn">&times;</button>
       <a href="#">Home</a>
       <a href="#products">Shop</a>
@@ -874,7 +873,6 @@ nav a:hover::after{width:100%;}
       </div>
     </div>
     <div class="hero-right">
-       <!-- Hero Images updated with placeholders -->
        <div class="bottle float1" style="left:20%; top:40px; width:510px; height:510px;">
           <img src="images/bottle2.png" alt="Amber Dusk" style="width:90%; height:600px; object-fit:contain;">
         </div>
@@ -894,9 +892,7 @@ nav a:hover::after{width:100%;}
       <div class="product-grid-wrapper" id="gridWrap">
           </div>
           
-      <!-- New mobile action buttons for the offer zone -->
       <div class="mobile-offer-actions">
-        <!-- Initial button text updated by JS after fetching offers -->
         <button class="change-btn" id="changeCardBtn">Change Card</button>
         <button class="copy-btn-mobile" id="copyCodeBtn">Copy Code</button>
       </div>
@@ -1025,7 +1021,6 @@ nav a:hover::after{width:100%;}
 </div>
 </footer>
 
-<!-- Custom message box replacement for alert() -->
 <div id="custom-message" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 20px; border-radius:10px; z-index:2000; box-shadow:0 4px 12px rgba(0,0,0,0.3); font-size: 14px; opacity:0; pointer-events: none;"></div>
 
 <script>
@@ -1054,9 +1049,8 @@ nav a:hover::after{width:100%;}
         }, 3000);
     }
     
-    // --- NEW: Centralized server configuration ---
-    const serverBase = "https://ekamperfumes-production.up.railway.app";
-    const apiBase = `${serverBase}/api`;
+    // --- Centralized server configuration ---
+    const apiBase = "https://ekamperfumes-production.up.railway.app/api";
 
     // Hamburger and Close button toggle
     const hamburger = document.getElementById('hamburger');
@@ -1078,7 +1072,7 @@ nav a:hover::after{width:100%;}
         });
     }
 
-    // --- NEW/MODIFIED FUNCTION: Add product to cart ---
+    // --- Add product to cart ---
     function addToCart(product) {
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
         const existingProductIndex = cart.findIndex(item => item.id === product._id);
@@ -1088,7 +1082,7 @@ nav a:hover::after{width:100%;}
             id: product._id,
             name: product.name,
             price: product.price,
-            img: `${serverBase}${product.image}`, // Full image path
+            img: product.image, // ++ FIXED: Use the full Cloudinary URL directly
             qty: 1
         };
 
@@ -1099,10 +1093,10 @@ nav a:hover::after{width:100%;}
         }
 
         localStorage.setItem("cart", JSON.stringify(cart));
-        showMessage(`${product.name} added to cart!`); // Replaced alert()
+        showMessage(`${product.name} added to cart!`);
     }
 
-    // --- NEW/MODIFIED FUNCTION: Toggle favorite status (add/remove) ---
+    // --- Toggle favorite status (add/remove) ---
     function toggleFavoriteStatus(product, favBtn) {
         let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
         const existingProductIndex = favorites.findIndex(item => item.id === product._id);
@@ -1112,7 +1106,7 @@ nav a:hover::after{width:100%;}
             id: product._id,
             name: product.name,
             price: product.price,
-            img: `${serverBase}${product.image}`, // Full image path
+            img: product.image, // ++ FIXED: Use the full Cloudinary URL directly
         };
 
 
@@ -1127,7 +1121,7 @@ nav a:hover::after{width:100%;}
         }
 
         localStorage.setItem("favorites", JSON.stringify(favorites));
-        showMessage(`Toggled favorite status for ${product.name}`); // Replaced alert()
+        showMessage(`Toggled favorite status for ${product.name}`);
     }
     
     // Open product view page
@@ -1140,7 +1134,7 @@ nav a:hover::after{width:100%;}
         window.location.href = 'product.html';
     }
 
-    // --- MODIFIED --- Render products and set initial favorite status
+    // --- Render products and set initial favorite status ---
     function renderProducts(products, containerId) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -1152,12 +1146,10 @@ nav a:hover::after{width:100%;}
             const card = document.createElement('div');
             card.className = containerId === 'productsGrid' ? 'product-card-grid' : 'product-card-scroll';
 
-            // Check using the standardized ID key
             const isFavorite = favorites.some(item => item.id === product._id);
 
             card.innerHTML = `
-                <img src="${serverBase}${product.image}" alt="${product.name}">
-                <h4>${product.name}</h4>
+                <img src="${product.image}" alt="${product.name}"> <h4>${product.name}</h4>
                 <p class="price">₹${product.price}</p>
                 <div style="display: flex; gap: 8px; justify-content: center; align-items: center; padding: 0 10px;">
                     <button class="add-cart" style="flex-grow: 1;">Add to Cart</button>
@@ -1165,7 +1157,6 @@ nav a:hover::after{width:100%;}
                 </div>
             `;
 
-            // FIXED: Product View Listener on card click
             card.addEventListener('click', () => openProductView(product._id));
             
             const cartBtn = card.querySelector('.add-cart');
@@ -1217,7 +1208,6 @@ nav a:hover::after{width:100%;}
         
         let filtered = [...window.allProducts];
 
-        // Ensure category and gender values match DB keys ('Men', 'Women', 'Unisex', etc.)
         if (genderSelect && genderSelect.value !== 'All') {
              const filterValue = genderSelect.value === 'For Him' ? 'Men' : 
                                  genderSelect.value === 'For Her' ? 'Women' : genderSelect.value;
@@ -1244,7 +1234,6 @@ nav a:hover::after{width:100%;}
 
 // ----- Copy Code Function -----
 function copyCode(code){
-  // Use clipboard API and custom message
   navigator.clipboard.writeText(code).then(() => {
     showMessage("Copied code: " + code);
   }).catch(err => {
@@ -1258,24 +1247,21 @@ let offerAnimationTimeline = null;
 
 // Function to update the content of a single card DOM element
 function updateCardContent(cardElement, offer) {
-    if (!cardElement || !offer) return; // Added null check
+    if (!cardElement || !offer) return;
 
     cardElement.setAttribute('data-code', offer.code);
     
-    // Safely update image source/alt
     const imgElement = cardElement.querySelector('img');
     if (imgElement) {
-        imgElement.src = `${serverBase}${offer.image}`;
+        imgElement.src = offer.image; // ++ FIXED: Use the full Cloudinary URL directly
         imgElement.alt = `Offer code ${offer.code}`;
     }
 
-    // Safely update desktop code text
     const codeTextElement = cardElement.querySelector('.code-text');
     if (codeTextElement) {
         codeTextElement.textContent = offer.code;
     }
 
-    // Set the desktop click handler
     if (window.innerWidth > 768) {
          cardElement.onclick = () => copyCode(offer.code);
     }
@@ -1294,14 +1280,11 @@ function updateMobileButtons(offer) {
 function cycleMobileOffer() {
     if (allOffers.length === 0 || offerCardElements.length === 0) return;
 
-    // Use the middle card element (index 2 of the 5 rendered) as the target for the new offer
     const targetCard = offerCardElements[2]; 
 
-    // Move to the next offer index
     currentOfferIndex = (currentOfferIndex + 1) % allOffers.length;
     const nextOffer = allOffers[currentOfferIndex];
     
-    // 1. Animate the current center card out (to simulate replacing it)
     const cycleTl = gsap.timeline({ defaults: { ease: "power1.inOut" } });
 
     cycleTl.to(targetCard, {
@@ -1312,13 +1295,11 @@ function cycleMobileOffer() {
         scale: 0.98,
     });
     
-    // 2. Update the content and button code immediately after the "out" animation starts
     cycleTl.call(() => {
         updateCardContent(targetCard, nextOffer);
         updateMobileButtons(nextOffer);
     }, null, "<0.1"); 
     
-    // 3. Animate the new content in
     cycleTl.to(targetCard, {
         duration: 0.35,
         rotationZ: 0,
@@ -1336,28 +1317,23 @@ function startOfferZoneAnimation() {
     const gridWrapper = document.getElementById('gridWrap');
     if (!gridWrapper) return;
 
-    // Check if a timeline is already running and kill it before restarting
     if (offerAnimationTimeline) {
         offerAnimationTimeline.kill();
         offerAnimationTimeline = null;
     }
 
-    // 1. Fetch offers from your API
     fetch(`${apiBase}/offers`)
         .then(response => response.json())
         .then(offers => {
-            allOffers = offers; // Store all offers
+            allOffers = offers;
             
-            // Render MAX_CARDS_ON_SCREEN (5) or the total number of offers, whichever is smaller
             const offersToRender = allOffers.slice(0, MAX_CARDS_ON_SCREEN);
             
-            // 2. Clear content and create card DOM elements (based on initial offers)
             gridWrapper.innerHTML = ''; 
             offersToRender.forEach(offer => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 
-                // FIXED BUG: Ensure inner HTML structure exists before calling updateCardContent
                 card.innerHTML = `
                     <img src="https://placehold.co/180x280/caa97a/ffffff?text=OFFER" alt="Offer placeholder">
                     <div class="code-box">
@@ -1372,11 +1348,10 @@ function startOfferZoneAnimation() {
 
             offerCardElements = Array.from(zone.querySelectorAll('.product-card'));
             
-            // 3. Conditional GSAP Animation
             const isMobile = window.innerWidth <= 768;
             
             if (!isMobile) {
-                // DESKTOP ANIMATION (Full 5-card spread)
+                // DESKTOP ANIMATION
                 const xPositions = [-520, -260, 0, 260, 520]; 
                 const yOffsets = [-28, -10, -22, -10, -28];
                 const baseRotY  = [10, 5, 0, -5, -10];
@@ -1402,32 +1377,30 @@ function startOfferZoneAnimation() {
                 offerAnimationTimeline.to(offerCardElements, { duration: 2.6, y: "+=8", repeat: -1, yoyo: true, stagger: 0.12 }, "-=0.2");
 
             } else {
-                // MOBILE ANIMATION (Single card focus)
+                // MOBILE ANIMATION
                 const centerCardOffer = allOffers[0];
-                currentOfferIndex = 0; // Reset index for mobile cycle
+                currentOfferIndex = 0;
                 
                 offerAnimationTimeline = gsap.timeline({ defaults: { ease: "power3.out" } });
                 
                 offerAnimationTimeline.to(zone, { duration: 0.6, autoAlpha: 1, scale: 1 });
                 
-                // Animate all 5 cards into a tight, slightly fanned stack for the "card game" look
                 offerAnimationTimeline.to(offerCardElements, {
                     duration: 1.1,
                     x: 0, 
                     y: 0,
                     rotationY: 0,
-                    rotationZ: (i) => (i - 2) * 2, // Fanning rotation (-4, -2, 0, 2, 4 degrees)
+                    rotationZ: (i) => (i - 2) * 2,
                     scale: 1,
                     opacity: 1, 
                     visibility: "visible",
-                    zIndex: (i) => 5 - Math.abs(i - 2), // Center card (2) has highest z-index
+                    zIndex: (i) => 5 - Math.abs(i - 2),
                     stagger: { amount: 0.2, from: "center" }
                 }, "-=0.2");
                 
                 offerAnimationTimeline.to('.offer-zone h2', { duration: 0.5, autoAlpha: 1, y: 0 }, "-=0.9");
                 offerAnimationTimeline.to('.offer-zone .subtitle', { duration: 0.45, autoAlpha: 1, y: 0 }, "-=0.85");
 
-                // Set up mobile buttons to cycle
                 const changeCardBtn = document.getElementById('changeCardBtn');
                 if (changeCardBtn) changeCardBtn.onclick = cycleMobileOffer;
                 
@@ -1479,12 +1452,9 @@ if (offerZone) {
 }
 
 // ----- Mobile Offer Zone Button Handlers -----
-// These handlers are now attached inside startOfferZoneAnimation for mobile view,
-// but the functions remain here for use in desktop view (copyCode)
 const copyCodeBtn = document.getElementById('copyCodeBtn');
 
 if (copyCodeBtn) {
-    // Default desktop behavior (click handler for desktop card is set inside updateCardContent)
     if (window.innerWidth > 768) {
         copyCodeBtn.onclick = () => showMessage("Please click the card to copy the code on desktop.");
     }
